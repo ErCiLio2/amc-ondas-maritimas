@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { T, useLang } from '../i18n/LangContext.jsx';
+import { toPlainText } from '../i18n/utils.js';
 import SEO from '../components/SEO.jsx';
 import Reveal from '../components/Reveal.jsx';
 import { services, getServiceBySlug } from '../data/services.js';
@@ -16,14 +17,15 @@ export default function ServiceDetail() {
 
   if (!service) return <Navigate to="/" replace />;
 
-  const title = `${t(service.titleKey).replace(/<br\s*\/?>/g, ' ')} | AMC — Ondas Marítimas`;
+  const plainTitle = toPlainText(t(service.titleKey));
+  const title = `${plainTitle} | AMC — Ondas Marítimas`;
   const description = t(service.descKey);
   const others = services.filter((s) => s.slug !== service.slug);
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    serviceType: t(service.titleKey).replace(/<br\s*\/?>/g, ' '),
+    serviceType: plainTitle,
     provider: { '@type': 'LocalBusiness', name: 'AMC — Ondas Marítimas, Serviços Marítimos, Lda.' },
     areaServed: 'Angola',
     description,

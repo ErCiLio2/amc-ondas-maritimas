@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMC — Ondas Marítimas · Serviços Marítimos, Lda.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#000408;--abyss:#000b14;--deep:#01111f;--trench:#011828;
+  --neon:#00f0ff;--bio:#00ff88;--pulse:rgba(0,240,255,.18);
+  --glow:rgba(0,240,255,.55);--text:#b8e8f8;--muted:#4d8da8;
+  --white:#dff6ff;--line:rgba(0,240,255,.09);--warm:#0ff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;height:100%}
+body{background:var(--void);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+@media(pointer:coarse){body{cursor:auto}#cursor-cv{display:none}}
+::selection{background:rgba(0,240,255,.2);color:var(--white)}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:var(--void)}::-webkit-scrollbar-thumb{background:var(--neon)}
+
+/* ══════════════════════════════════
+   FIXED CANVAS LAYERS
+══════════════════════════════════ */
+#ocean-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#cursor-cv{position:fixed;inset:0;z-index:9000;pointer-events:none}
+
+/* ══════════════════════════════════
+   DEPTH METER
+══════════════════════════════════ */
+#depth-meter{
+  position:fixed;right:28px;top:50%;transform:translateY(-50%);
+  z-index:800;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;transition:opacity .8s;
+}
+#depth-meter.visible{opacity:1}
+.dm-label{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:3px;color:rgba(0,240,255,.35);writing-mode:vertical-rl;text-transform:uppercase}
+.dm-track{width:1px;height:160px;background:rgba(0,240,255,.08);position:relative}
+.dm-fill{position:absolute;top:0;left:0;width:1px;background:linear-gradient(180deg,var(--neon),var(--bio));transition:height .4s;box-shadow:0 0 8px var(--neon)}
+.dm-sub{font-size:18px;line-height:1;filter:drop-shadow(0 0 4px var(--neon));animation:subBob 3s ease-in-out infinite}
+@keyframes subBob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+.dm-val{font-family:'Space Mono',monospace;font-size:8px;color:var(--neon);letter-spacing:1px}
+.dm-bubbles{position:absolute;left:4px;top:0;width:12px;height:160px;overflow:hidden;pointer-events:none}
+.dm-bub{position:absolute;width:3px;height:3px;background:rgba(0,240,255,.4);border-radius:50%;left:0;animation:dmBubRise 3s ease-in infinite}
+@keyframes dmBubRise{from{bottom:-5px;opacity:.8}to{bottom:170px;opacity:0}}
+
+/* ══════════════════════════════════
+   NAV
+══════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:700;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 64px;transition:all .5s;
+}
+nav.deep{
+  background:rgba(0,4,8,.97);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(14px);
+}
+.nav-logo{display:flex;align-items:center;gap:0;position:relative}
+.logo-text{
+  font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:12px;
+  color:var(--white);line-height:1;
+  text-shadow:0 0 40px var(--glow),0 0 80px rgba(0,240,255,.15);
+}
+.logo-sonar{position:absolute;right:-14px;top:50%;transform:translateY(-50%);width:8px;height:8px;background:var(--neon);border-radius:50%;box-shadow:0 0 12px var(--neon)}
+.logo-sonar::before,.logo-sonar::after{content:'';position:absolute;inset:0;border-radius:50%;border:1px solid var(--neon);animation:lsonar 2.5s ease-out infinite}
+.logo-sonar::after{animation-delay:1.25s}
+@keyframes lsonar{0%{transform:scale(1);opacity:.8}100%{transform:scale(4);opacity:0}}
+.nav-center{display:flex;gap:36px;list-style:none}
+.nav-center a{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all .25s;position:relative}
+.nav-center a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--neon);box-shadow:0 0 6px var(--neon);transition:width .3s}
+.nav-center a:hover{color:var(--neon)}
+.nav-center a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:20px}
+.lang-sw{display:flex;border:1px solid var(--line)}
+.lb{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;background:none;border:none;color:var(--muted);cursor:pointer;padding:5px 11px;transition:all .2s}
+.lb.on{background:var(--neon);color:var(--void)}
+.lb:hover:not(.on){color:var(--neon)}
+.nav-btn{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--void);background:var(--neon);text-decoration:none;padding:10px 24px;transition:all .3s;box-shadow:0 0 24px rgba(0,240,255,.3)}
+.nav-btn:hover{box-shadow:0 0 48px rgba(0,240,255,.6);transform:translateY(-1px)}
+
+/* ══════════════════════════════════
+   HERO
+══════════════════════════════════ */
+.hero{
+  min-height:100vh;position:relative;
+  display:flex;align-items:center;padding:0 64px 100px;
+  overflow:hidden;perspective:1400px;
+}
+
+/* Slide stack */
+.hero-stack{position:absolute;inset:0;z-index:1;transform-style:preserve-3d}
+.hs{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 2.2s ease;transform:scale(1.08)}
+.hs.on{opacity:1;animation:kbDeep 12s ease-in-out infinite alternate}
+@keyframes kbDeep{0%{transform:scale(1.08) translateX(0)}100%{transform:scale(1) translateX(-1%)}}
+
+/* Deep overlay stack */
+.h-ov1{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(0,4,8,.08) 0%,rgba(0,4,8,.95) 100%)}
+.h-ov2{position:absolute;inset:0;z-index:3;background:linear-gradient(112deg,rgba(0,4,8,.82) 0%,transparent 52%)}
+.h-ov3{position:absolute;inset:0;z-index:4;background:radial-gradient(ellipse 160% 100% at 80% 0%,rgba(0,60,100,.45) 0%,transparent 55%);pointer-events:none}
+.h-vign{position:absolute;inset:0;z-index:5;background:radial-gradient(ellipse at 50% 50%,transparent 38%,rgba(0,4,8,.7) 100%);pointer-events:none}
+
+/* Caustics */
+.caustics{position:absolute;inset:0;z-index:4;overflow:hidden;pointer-events:none;opacity:.22}
+.ca{position:absolute;border-radius:50%;background:radial-gradient(ellipse,rgba(0,240,255,.55) 0%,transparent 68%);animation:caMove 9s ease-in-out infinite}
+.ca:nth-child(1){width:280px;height:160px;top:4%;left:28%;animation-duration:8s}
+.ca:nth-child(2){width:180px;height:110px;top:18%;left:55%;animation-duration:11s;animation-delay:2s}
+.ca:nth-child(3){width:340px;height:200px;top:2%;left:60%;animation-duration:13s;animation-delay:4.5s}
+.ca:nth-child(4){width:150px;height:90px;top:30%;left:42%;animation-duration:7s;animation-delay:1s;opacity:.6}
+.ca:nth-child(5){width:200px;height:120px;top:10%;left:80%;animation-duration:9.5s;animation-delay:3s}
+@keyframes caMove{0%,100%{transform:translate(0,0) rotate(0deg) scaleX(1)}30%{transform:translate(25px,14px) rotate(9deg) scaleX(1.18)}60%{transform:translate(-18px,25px) rotate(-6deg) scaleX(.85)}85%{transform:translate(14px,-18px) rotate(14deg) scaleX(1.1)}}
+
+/* Light shafts */
+.shafts{position:absolute;inset:0;z-index:4;overflow:hidden;pointer-events:none}
+.sh{position:absolute;top:-15%;transform-origin:top center;background:linear-gradient(180deg,rgba(0,240,255,.25) 0%,rgba(0,240,255,.08) 35%,transparent 100%);animation:shPulse 9s ease-in-out infinite}
+.sh:nth-child(1){width:2px;left:16%;transform:rotate(-20deg);animation-duration:8s}
+.sh:nth-child(2){width:1px;left:29%;transform:rotate(-12deg);animation-delay:1.8s;height:140vh;opacity:.5}
+.sh:nth-child(3){width:4px;left:46%;transform:rotate(-4deg);animation-delay:3.2s;height:150vh}
+.sh:nth-child(4){width:2px;left:61%;transform:rotate(7deg);animation-delay:5s;height:130vh;opacity:.6}
+.sh:nth-child(5){width:3px;left:73%;transform:rotate(15deg);animation-delay:2.4s;height:160vh;opacity:.7}
+.sh:nth-child(6){width:1px;left:84%;transform:rotate(-7deg);animation-delay:6.5s;height:120vh;opacity:.4}
+.sh:nth-child(7){width:5px;left:38%;transform:rotate(-16deg);animation-delay:.8s;height:145vh;opacity:.3}
+@keyframes shPulse{0%,100%{opacity:.2;transform:rotate(-20deg) scaleX(1)}50%{opacity:1;transform:rotate(-13deg) scaleX(2.8)}}
+
+/* 3D Grid */
+.grid3{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;perspective:900px}
+.grid3::before{
+  content:'';position:absolute;inset:-60%;
+  background:repeating-linear-gradient(0deg,transparent,transparent 90px,rgba(0,240,255,.055) 90px,rgba(0,240,255,.055) 91px),
+             repeating-linear-gradient(90deg,transparent,transparent 90px,rgba(0,240,255,.055) 90px,rgba(0,240,255,.055) 91px);
+  transform:rotateX(68deg) translateY(-30%);animation:gridDrift 30s linear infinite;
+}
+@keyframes gridDrift{from{transform:rotateX(68deg) translateY(-30%)}to{transform:rotateX(68deg) translateY(0%)}}
+
+/* Pressure scanner */
+.scanner{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.scanner-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.4),transparent);box-shadow:0 0 8px var(--neon);animation:scan 8s linear infinite;top:-2px}
+@keyframes scan{from{top:-2px}to{top:100vh}}
+
+/* Parallax wrapper */
+.hero-plx{position:relative;z-index:10;max-width:860px;transform-style:preserve-3d;will-change:transform}
+
+/* Eyebrow */
+.hero-eye{
+  font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:7px;
+  text-transform:uppercase;color:var(--neon);text-shadow:0 0 18px var(--neon);
+  margin-bottom:30px;display:flex;align-items:center;gap:18px;
+  animation:depthIn 1.4s .2s both;
+}
+.hero-eye::before{content:'';width:46px;height:1px;background:var(--neon);box-shadow:0 0 10px var(--neon);flex-shrink:0}
+@keyframes depthIn{from{opacity:0;transform:translateZ(-80px) translateY(40px)}to{opacity:1;transform:translateZ(0) translateY(0)}}
+
+/* Hero h1 */
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(88px,12.5vw,188px);
+  line-height:.82;letter-spacing:2px;color:var(--white);margin-bottom:40px;
+  animation:depthIn 1.4s .45s both;
+}
+.hero h1 .gline{
+  display:block;color:var(--neon);
+  text-shadow:0 0 80px rgba(0,240,255,.55),0 0 160px rgba(0,240,255,.2);
+  animation:glitch 8s ease-in-out infinite;
+}
+@keyframes glitch{
+  0%,94%,100%{text-shadow:0 0 80px rgba(0,240,255,.55),0 0 160px rgba(0,240,255,.2);transform:none}
+  95%{text-shadow:-3px 0 rgba(255,0,128,.8),3px 0 rgba(0,240,255,.8);transform:translateX(-2px)}
+  96%{text-shadow:3px 0 rgba(255,0,128,.8),-3px 0 rgba(0,240,255,.8);transform:translateX(2px)}
+  97%{text-shadow:0 0 80px rgba(0,240,255,.55);transform:none}
+}
+.hero-desc{font-size:16px;line-height:1.95;color:var(--muted);max-width:500px;margin-bottom:56px;animation:depthIn 1.4s .7s both}
+.hero-acts{display:flex;gap:16px;flex-wrap:wrap;animation:depthIn 1.4s .95s both}
+
+/* Buttons */
+.btn-p{
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:4px;
+  text-transform:uppercase;color:var(--void);background:var(--neon);text-decoration:none;
+  padding:17px 42px;position:relative;overflow:hidden;transition:all .4s;
+  box-shadow:0 0 32px rgba(0,240,255,.4);
+}
+.btn-p::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 55%);opacity:0;transition:opacity .3s}
+.btn-p:hover{box-shadow:0 0 64px rgba(0,240,255,.7);transform:translateY(-3px) scale(1.02)}
+.btn-p:hover::before{opacity:1}
+.btn-g{
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:4px;
+  text-transform:uppercase;color:var(--neon);border:1px solid rgba(0,240,255,.4);
+  text-decoration:none;padding:17px 42px;transition:all .4s;backdrop-filter:blur(6px);
+  background:rgba(0,240,255,.04);
+}
+.btn-g:hover{border-color:var(--neon);background:rgba(0,240,255,.1);box-shadow:0 0 32px rgba(0,240,255,.18);transform:translateY(-3px)}
+
+/* Slide dots */
+.sdots{position:absolute;bottom:50px;right:64px;z-index:20;display:flex;gap:12px}
+.sd{width:24px;height:2px;background:rgba(0,240,255,.18);cursor:pointer;transition:all .4s;position:relative;overflow:hidden}
+.sd::after{content:'';position:absolute;top:0;left:-100%;height:100%;width:100%;background:var(--neon);box-shadow:0 0 8px var(--neon);transition:left .4s}
+.sd.on{width:56px}.sd.on::after{left:0}
+
+/* Sonar + scroll */
+.hero-sonar{position:absolute;bottom:54px;left:64px;z-index:20;display:flex;align-items:center;gap:16px;animation:depthIn 1.6s 1.6s both}
+.sonar-wrap{width:52px;height:52px;position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sonar-wrap::before,.sonar-wrap::after,.sonar-r3{content:'';position:absolute;border:1px solid rgba(0,240,255,.22);border-radius:50%;animation:sonarOut 2.8s ease-out infinite}
+.sonar-wrap::before{inset:0;animation-delay:0s}
+.sonar-wrap::after{inset:0;animation-delay:.93s}
+.sonar-r3{inset:0;animation-delay:1.87s}
+@keyframes sonarOut{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.2);opacity:0}}
+.sonar-core{width:6px;height:6px;background:var(--neon);border-radius:50%;box-shadow:0 0 12px var(--neon),0 0 24px rgba(0,240,255,.4)}
+.sonar-lbl{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:rgba(0,240,255,.45)}
+
+/* ══════════════════════════════════
+   STATS
+══════════════════════════════════ */
+.stats{
+  position:relative;z-index:100;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:rgba(0,8,16,.97);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  backdrop-filter:blur(18px);
+}
+.si{
+  padding:40px 44px;border-right:1px solid var(--line);
+  position:relative;overflow:hidden;transition:background .5s;
+}
+.si:last-child{border-right:none}
+.si:hover{background:rgba(0,240,255,.025)}
+.si::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--neon);box-shadow:0 0 10px var(--neon);transition:width .7s}
+.si:hover::after{width:100%}
+.sn{
+  font-family:'Bebas Neue',sans-serif;font-size:62px;letter-spacing:2px;
+  color:var(--white);line-height:.9;margin-bottom:10px;
+  display:flex;align-items:flex-start;gap:4px;
+}
+.ss{font-size:28px;color:var(--neon);margin-top:8px;text-shadow:0 0 12px var(--neon)}
+.sl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
+
+/* ══════════════════════════════════
+   SECTION BASE
+══════════════════════════════════ */
+section{position:relative;z-index:100}
+.tag{
+  font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:6px;
+  text-transform:uppercase;color:var(--neon);text-shadow:0 0 10px rgba(0,240,255,.5);
+  margin-bottom:20px;display:flex;align-items:center;gap:14px;
+}
+.tag::before{content:'';width:28px;height:1px;background:var(--neon);box-shadow:0 0 8px var(--neon);flex-shrink:0}
+.tag.c{justify-content:center}.tag.c::before{display:none}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-spacing:3px;color:var(--white);line-height:.9;margin-bottom:24px}
+.intro{font-size:15.5px;line-height:1.95;color:var(--muted);max-width:580px}
+
+/* Wave divider */
+.wave-div{width:100%;overflow:hidden;line-height:0;position:relative;z-index:100}
+.wave-div svg{display:block;width:100%;transform:scaleX(-1)}
+
+/* Reveal animations */
+.rv{opacity:0;transform:translateY(35px) translateZ(-30px);transition:opacity 1s,transform 1s}
+.rv.in{opacity:1;transform:translateY(0) translateZ(0)}
+.rvL{opacity:0;transform:translateX(-50px);transition:opacity 1s,transform 1s}
+.rvL.in{opacity:1;transform:translateX(0)}
+.rvR{opacity:0;transform:translateX(50px);transition:opacity 1s,transform 1s}
+.rvR.in{opacity:1;transform:translateX(0)}
+
+/* ══════════════════════════════════
+   SERVICES — 3D TILT CARDS
+══════════════════════════════════ */
+.services{padding:130px 64px;background:var(--abyss)}
+.srv-hd{text-align:center;margin-bottom:88px}
+.srv-hd .intro{margin:0 auto}
+.srv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.sc{
+  background:var(--deep);padding:54px 36px;
+  position:relative;overflow:hidden;transition:background .5s;
+  transform-style:preserve-3d;transform:perspective(900px) rotateX(0) rotateY(0);
+  will-change:transform;
+}
+.sc:hover{background:rgba(0,32,56,.6)}
+.sc-bar{position:absolute;top:0;left:0;width:0;height:2px;background:var(--neon);box-shadow:0 0 18px var(--neon),0 0 36px rgba(0,240,255,.3);transition:width .55s}
+.sc:hover .sc-bar{width:100%}
+.sc-glow{
+  position:absolute;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,240,255,.1) 0%,transparent 68%);
+  pointer-events:none;transition:opacity .4s;opacity:0;
+  transform:translate(-50%,-50%);
+}
+.sc:hover .sc-glow{opacity:1}
+.sc-corner{position:absolute;bottom:20px;right:20px;font-size:9px;font-family:'Space Mono',monospace;color:rgba(0,240,255,.12);letter-spacing:2px}
+.sc-ico{font-size:36px;margin-bottom:26px;display:block;filter:drop-shadow(0 0 10px rgba(0,240,255,.4));transition:transform .45s}
+.sc:hover .sc-ico{transform:scale(1.2) translateY(-4px) translateZ(20px)}
+.sc-n{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--neon);margin-bottom:16px;opacity:.35;position:relative;z-index:1}
+.sc h3{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:var(--white);margin-bottom:14px;line-height:1.02;position:relative;z-index:1}
+.sc p{font-size:13.5px;line-height:1.84;color:var(--muted);position:relative;z-index:1}
+.sc-ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:24px;padding-top:22px;border-top:1px solid var(--line);position:relative;z-index:1}
+.sc-ul li{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;color:var(--muted);display:flex;align-items:center;gap:10px;transition:color .3s,transform .3s}
+.sc-ul li::before{content:'';width:5px;height:5px;background:var(--neon);flex-shrink:0;box-shadow:0 0 8px var(--neon);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);transition:transform .3s}
+.sc:hover .sc-ul li{color:var(--text)}
+.sc:hover .sc-ul li::before{transform:rotate(45deg) scale(1.3)}
+
+/* ══════════════════════════════════
+   STORAGE
+══════════════════════════════════ */
+.storage{padding:0 64px 130px;background:var(--abyss)}
+.sto-box{border:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;overflow:hidden;position:relative;background:var(--deep)}
+.sto-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--neon) 50%,transparent 100%);box-shadow:0 0 24px var(--neon)}
+.sto-box::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,240,255,.03) 0%,transparent 55%);pointer-events:none}
+.sto-txt{padding:88px 68px;position:relative;z-index:1}
+.sto-txt .intro{margin-top:22px;margin-bottom:52px}
+.sto-nums{display:flex;flex-direction:column;gap:36px}
+.sto-n{display:flex;align-items:center;gap:32px;padding-bottom:36px;border-bottom:1px solid var(--line)}
+.sto-n:last-child{border-bottom:none;padding-bottom:0}
+.sto-val{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,5.5vw,80px);
+  color:var(--white);line-height:1;display:flex;align-items:flex-end;gap:8px;min-width:240px;
+}
+.sto-m2{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--neon);text-shadow:0 0 14px var(--neon);margin-bottom:7px}
+.sto-lb{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.sto-ds{font-size:13px;color:rgba(77,141,168,.55);margin-top:5px}
+.sto-vis{position:relative;overflow:hidden;background:var(--void)}
+.sto-vis img{width:100%;height:100%;object-fit:cover;opacity:.5;filter:saturate(.45) brightness(.7);transform:scale(1.05);transition:transform 8s ease}
+.sto-vis:hover img{transform:scale(1)}
+.sto-vis::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--deep) 0%,transparent 32%)}
+.sto-vis::after{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(0deg,rgba(0,4,8,.65) 0%,transparent 50%)}
+.sto-tag{position:absolute;bottom:36px;left:36px;z-index:3;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--neon);border:1px solid rgba(0,240,255,.28);padding:7px 18px}
+
+/* ══════════════════════════════════
+   PARTNERS
+══════════════════════════════════ */
+.partners{padding:130px 64px;background:var(--trench);border-top:1px solid var(--line);position:relative;overflow:hidden}
+.partners::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,240,255,.03) 0%,transparent 65%);pointer-events:none}
+.par-hd{text-align:center;margin-bottom:72px}
+.par-hd .intro{margin:0 auto}
+.par-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1040px;margin:0 auto}
+.par-card{
+  background:rgba(0,8,16,.65);border:1px solid var(--line);padding:64px;
+  position:relative;overflow:hidden;transition:all .5s;backdrop-filter:blur(12px);
+  transform-style:preserve-3d;
+}
+.par-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(0,240,255,.07) 0%,transparent 55%);opacity:0;transition:opacity .45s}
+.par-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),transparent);transform:scaleX(0);transition:transform .5s;box-shadow:0 0 16px var(--neon)}
+.par-card:hover{border-color:rgba(0,240,255,.3);transform:translateY(-7px) rotateX(1.5deg);box-shadow:0 24px 72px rgba(0,4,8,.6),0 0 48px rgba(0,240,255,.06)}
+.par-card:hover::before{opacity:1}
+.par-card:hover::after{transform:scaleX(1)}
+.par-badge{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--neon);border:1px solid rgba(0,240,255,.25);padding:5px 14px;display:inline-block;margin-bottom:26px}
+.par-nm{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;color:var(--white);margin-bottom:20px;line-height:.92}
+.par-desc{font-size:14px;line-height:1.88;color:var(--muted)}
+
+/* ══════════════════════════════════
+   WHY AMC
+══════════════════════════════════ */
+.why{padding:140px 64px;background:var(--abyss)}
+.why-g{display:grid;grid-template-columns:1fr 1fr;gap:110px;align-items:center;max-width:1280px;margin:0 auto}
+.why-vis{position:relative;height:640px;perspective:1100px}
+.wi-main{
+  position:absolute;top:0;left:0;width:80%;height:74%;object-fit:cover;
+  filter:saturate(.55) brightness(.8);
+  box-shadow:0 24px 90px rgba(0,4,8,.75);
+  transform:rotateY(-5deg) rotateX(2.5deg);transition:transform .7s;
+}
+.wi-sec{
+  position:absolute;bottom:0;right:0;width:54%;height:48%;object-fit:cover;
+  border:1.5px solid var(--neon);box-shadow:0 0 48px rgba(0,240,255,.22),0 24px 64px rgba(0,4,8,.8);
+  filter:saturate(.55) brightness(.8);
+  transform:rotateY(4deg) rotateX(-2.5deg);transition:transform .7s;
+}
+.why-vis:hover .wi-main{transform:rotateY(-1.5deg) rotateX(1deg) scale(1.025)}
+.why-vis:hover .wi-sec{transform:rotateY(1.5deg) rotateX(-1deg) scale(1.035)}
+.why-badge{
+  position:absolute;top:46%;left:48%;transform:translate(-50%,-50%);
+  background:var(--neon);color:var(--void);text-align:center;padding:30px 24px;
+  width:136px;z-index:5;
+  box-shadow:0 0 70px rgba(0,240,255,.6),0 12px 48px rgba(0,4,8,.65);
+  animation:badgePulse 4s ease-in-out infinite;
+}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 70px rgba(0,240,255,.6),0 12px 48px rgba(0,4,8,.65)}50%{box-shadow:0 0 100px rgba(0,240,255,.9),0 12px 48px rgba(0,4,8,.65)}}
+.wb-n{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1}
+.wb-t{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.pillars{display:flex;flex-direction:column;gap:30px;margin-top:56px}
+.pillar{display:flex;gap:28px;padding-bottom:30px;border-bottom:1px solid var(--line);transition:border-color .35s}
+.pillar:last-child{border-bottom:none;padding-bottom:0}
+.pillar:hover{border-color:rgba(0,240,255,.2)}
+.pn{font-family:'Bebas Neue',sans-serif;font-size:50px;color:var(--neon);line-height:1;opacity:.15;flex-shrink:0;transition:opacity .35s;text-shadow:0 0 20px var(--neon)}
+.pillar:hover .pn{opacity:.35}
+.pillar h4{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--white);margin-bottom:9px}
+.pillar p{font-size:13.5px;line-height:1.84;color:var(--muted)}
+
+/* ══════════════════════════════════
+   LOCATIONS
+══════════════════════════════════ */
+.locs{padding:120px 64px;background:var(--trench);border-top:1px solid var(--line)}
+.loc-hd{text-align:center;margin-bottom:68px}
+.loc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);max-width:1280px;margin:0 auto}
+.lc{background:var(--void);padding:44px 28px;transition:all .45s;position:relative;overflow:hidden}
+.lc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(0,240,255,.08) 0%,transparent 65%);opacity:0;transition:opacity .45s}
+.lc:hover::before{opacity:1}
+.lc:hover{background:rgba(0,16,28,.9)}
+.lci{font-size:22px;margin-bottom:20px;display:block;filter:drop-shadow(0 0 7px rgba(0,240,255,.4))}
+.lcc{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--white);margin-bottom:8px}
+.lcr{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--neon);margin-bottom:24px;opacity:.5}
+.lcs{list-style:none;display:flex;flex-direction:column;gap:10px}
+.lcs li{font-size:13px;color:var(--muted);display:flex;gap:9px;align-items:flex-start;line-height:1.4}
+.lcs li::before{content:'—';color:var(--neon);opacity:.3;flex-shrink:0;font-size:10px;margin-top:2px}
+
+/* ══════════════════════════════════
+   PROCESS
+══════════════════════════════════ */
+.proc{padding:140px 64px;background:var(--abyss)}
+.proc-g{display:grid;grid-template-columns:1fr 400px;gap:88px;max-width:1280px;margin:0 auto;align-items:start}
+.psteps{display:flex;flex-direction:column;margin-top:56px;position:relative}
+.psteps::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--neon) 0%,rgba(0,240,255,.08) 100%);box-shadow:0 0 8px rgba(0,240,255,.2)}
+.pstep{display:flex;gap:34px;padding:32px 0;border-bottom:1px solid var(--line);transition:border-color .35s}
+.pstep:last-child{border-bottom:none}
+.pstep:hover{border-color:rgba(0,240,255,.22)}
+.psn{font-family:'Space Mono',monospace;font-size:11px;color:var(--neon);width:50px;height:50px;border:1px solid rgba(0,240,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s;background:rgba(0,240,255,.02)}
+.pstep:hover .psn{border-color:var(--neon);box-shadow:0 0 28px rgba(0,240,255,.32);background:rgba(0,240,255,.06)}
+.psc h4{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--white);margin-bottom:10px}
+.psc p{font-size:13.5px;line-height:1.8;color:var(--muted)}
+.certs{background:var(--deep);border:1px solid var(--line);padding:46px;position:sticky;top:100px}
+.ct{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--neon);margin-bottom:34px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.cr{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(0,240,255,.04);font-size:13px}
+.cn{color:var(--muted)}
+.ca{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--neon);background:rgba(0,240,255,.08);padding:3px 12px;border:1px solid rgba(0,240,255,.16)}
+.cp{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);background:rgba(77,141,168,.06);padding:3px 12px;border:1px solid rgba(77,141,168,.14)}
+
+/* ══════════════════════════════════
+   CTA
+══════════════════════════════════ */
+.cta-sec{padding:140px 64px;background:var(--trench);border-top:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+.cta-sec::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:700px;background:radial-gradient(ellipse,rgba(0,240,255,.07) 0%,transparent 65%);pointer-events:none}
+.cta-sec h2{margin-bottom:56px}
+.cta-acts{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;align-items:center}
+.btn-w{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:4px;text-transform:uppercase;background:var(--neon);color:var(--void);text-decoration:none;padding:18px 44px;transition:all .4s;box-shadow:0 0 36px rgba(0,240,255,.36)}
+.btn-w:hover{box-shadow:0 0 64px rgba(0,240,255,.65);transform:translateY(-3px)}
+.cta-info{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;color:var(--muted)}
+
+/* ══════════════════════════════════
+   FOOTER
+══════════════════════════════════ */
+footer{background:rgba(0,3,8,.99);border-top:1px solid var(--line);position:relative;z-index:100}
+.ft{display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr;gap:64px;padding:88px 64px 64px}
+.fb .logo-text{display:block;margin-bottom:8px;font-size:32px;letter-spacing:10px}
+.fb-lg{font-family:'Rajdhani',sans-serif;font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;opacity:.38}
+.fb-tg{font-size:13px;line-height:1.85;color:var(--muted);opacity:.5;max-width:300px}
+.fc h5{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--neon);margin-bottom:26px;opacity:.6}
+.fc ul{list-style:none}
+.fc ul li{margin-bottom:12px}
+.fc ul li a{font-size:13px;color:var(--muted);text-decoration:none;opacity:.5;transition:all .25s}
+.fc ul li a:hover{color:var(--neon);opacity:1}
+.fb2{padding:24px 64px;border-top:1px solid rgba(0,240,255,.04);display:flex;justify-content:space-between;align-items:center}
+.fb2 p{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;color:var(--muted);opacity:.32}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════ */
+@media(max-width:1100px){
+  nav{padding:18px 28px}.nav-center{gap:20px}
+  .hero{padding:0 28px 100px}
+  .sdots{right:28px}.hero-sonar{left:28px}
+  .srv-grid{grid-template-columns:repeat(2,1fr)}
+  .why-g{grid-template-columns:1fr;gap:64px}.why-vis{height:380px}
+  .proc-g{grid-template-columns:1fr}.certs{position:static}
+  .loc-grid{grid-template-columns:repeat(3,1fr)}
+  .ft{grid-template-columns:1fr 1fr;gap:48px}
+  .sto-box{grid-template-columns:1fr}.sto-vis{min-height:300px}
+  .par-grid{grid-template-columns:1fr}
+  .services,.storage,.partners,.why,.locs,.proc,.cta-sec{padding-left:28px;padding-right:28px}
+  .storage{padding-left:28px;padding-right:28px}
+}
+@media(max-width:768px){
+  nav{padding:14px 18px}.nav-center,.nav-btn,.lang-sw{display:none}
+  #depth-meter{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .srv-grid,.par-grid{grid-template-columns:1fr}
+  .loc-grid{grid-template-columns:repeat(2,1fr)}
+  .ft{grid-template-columns:1fr;padding:52px 22px 36px;gap:36px}
+  .fb2{padding:18px 22px;flex-direction:column;gap:8px;text-align:center}
+  body{cursor:auto}#cursor-cv{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ CANVAS LAYERS ══ -->
+<canvas id="ocean-bg"></canvas>
+<canvas id="cursor-cv"></canvas>
+
+<!-- ══ DEPTH METER ══ -->
+<div id="depth-meter">
+  <span class="dm-label" data-i18n="dep">Profundidade</span>
+  <div class="dm-track">
+    <div class="dm-fill" id="dmFill"></div>
+    <div class="dm-bubbles" id="dmBubs"></div>
+  </div>
+  <div class="dm-sub">🤿</div>
+  <span class="dm-val" id="dmVal">000m</span>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <div class="nav-logo">
+    <span class="logo-text">AMC</span>
+    <div class="logo-sonar"></div>
+  </div>
+  <ul class="nav-center">
+    <li><a href="#services" data-i18n="nav_srv">Serviços</a></li>
+    <li><a href="#partners" data-i18n="nav_par">Parceiros</a></li>
+    <li><a href="#about" data-i18n="nav_abt">Quem Somos</a></li>
+    <li><a href="#locations" data-i18n="nav_loc">Cobertura</a></li>
+    <li><a href="#contact" data-i18n="nav_con">Contacto</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-sw">
+      <button class="lb on" onclick="setLang('pt')">PT</button>
+      <button class="lb" onclick="setLang('en')">EN</button>
+      <button class="lb" onclick="setLang('fr')">FR</button>
+    </div>
+    <a href="#contact" class="nav-btn" data-i18n="nav_cta">Contactar</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="hero-stack" id="hStack">
+    <div class="hs on" style="background-image:url('https://images.unsplash.com/photo-1605664041952-4a2855d5ca5c?w=1600&q=75&auto=format&fit=crop')"></div>
+    <div class="hs" data-bg="https://images.unsplash.com/photo-1518364538800-6bae3c2ea0f2?w=1600&q=75&auto=format&fit=crop"></div>
+    <div class="hs" data-bg="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=1600&q=75&auto=format&fit=crop"></div>
+    <div class="hs" data-bg="https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1600&q=75&auto=format&fit=crop"></div>
+    <div class="hs" data-bg="https://images.unsplash.com/photo-1504387103978-e4ee71416c38?w=1600&q=75&auto=format&fit=crop"></div>
+    <div class="hs" data-bg="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1600&q=75&auto=format&fit=crop"></div>
+    <div class="hs" data-bg="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=1600&q=75&auto=format&fit=crop"></div>
+  </div>
+  <div class="h-ov1"></div><div class="h-ov2"></div><div class="h-ov3"></div><div class="h-vign"></div>
+  <div class="caustics"><div class="ca"></div><div class="ca"></div><div class="ca"></div><div class="ca"></div><div class="ca"></div></div>
+  <div class="shafts"><div class="sh" style="height:150vh"></div><div class="sh" style="height:130vh"></div><div class="sh" style="height:160vh"></div><div class="sh" style="height:145vh"></div><div class="sh" style="height:138vh"></div><div class="sh" style="height:125vh"></div><div class="sh" style="height:155vh"></div></div>
+  <div class="grid3"></div>
+  <div class="scanner"><div class="scanner-line"></div></div>
+
+  <div class="hero-plx" id="hPlx">
+    <p class="hero-eye" data-i18n="h_eye">Soluções Integradas · Offshore · Angola</p>
+    <h1>
+      <span data-i18n="h_h1a">PROFUNDIDADE</span>
+      <span class="gline" data-i18n="h_h1b">OPERACIONAL</span>
+    </h1>
+    <p class="hero-desc" data-i18n="h_desc">Parceiro estratégico de suporte marítimo, procurement e logística offshore em Angola. Da provisão ao cais — rastreável, seguro e a tempo.</p>
+    <div class="hero-acts">
+      <a href="#services" class="btn-p" data-i18n="h_cta1">Ver Serviços</a>
+      <a href="#contact" class="btn-g" data-i18n="h_cta2">Falar Connosco</a>
+    </div>
+  </div>
+
+  <div class="hero-sonar">
+    <div class="sonar-wrap"><div class="sonar-r3"></div><div class="sonar-core"></div></div>
+    <span class="sonar-lbl" data-i18n="h_op">Operacional</span>
+  </div>
+  <div class="sdots" id="sdots"></div>
+</section>
+
+<!-- ══ STATS ══ -->
+<div class="stats">
+  <div class="si"><div class="sn"><span class="counter" data-t="5">5</span><span class="ss">+</span></div><div class="sl" data-i18n="st1">Portos Cobertos</div></div>
+  <div class="si"><div class="sn"><span class="counter" data-t="24">24</span><span class="ss">h</span></div><div class="sl" data-i18n="st2">Resposta de Urgência</div></div>
+  <div class="si"><div class="sn"><span class="counter" data-t="100">100</span><span class="ss">%</span></div><div class="sl" data-i18n="st3">Capital Angolano</div></div>
+  <div class="si"><div class="sn"><span class="counter" data-t="4">4</span></div><div class="sl" data-i18n="st4">Áreas de Serviço</div></div>
+</div>
+
+<!-- ══ SERVICES ══ -->
+<section class="services" id="services">
+  <div class="srv-hd rv"><p class="tag c" data-i18n="srv_tag">O Que Fazemos</p><h2 data-i18n="srv_h2">SOLUÇÕES MARÍTIMAS INTEGRADAS</h2><p class="intro" data-i18n="srv_intro">Da sourcing estratégica ao cais, da tripulação ao gás industrial — um parceiro, cobertura total.</p></div>
+  <div class="srv-grid">
+    <div class="sc rv" data-tilt><div class="sc-bar"></div><div class="sc-glow"></div><div class="sc-corner">SRV-001</div><span class="sc-ico">⚓</span><div class="sc-n">01 / PROC</div><h3 data-i18n="s1h">PROCUREMENT</h3><p data-i18n="s1p">Sourcing estratégico, gestão de fornecedores e aquisição de materiais críticos para operações industriais e offshore.</p><ul class="sc-ul"><li data-i18n="s1a">Strategic sourcing</li><li data-i18n="s1b">Vendor management</li><li data-i18n="s1c">Equipamentos marítimos &amp; offshore</li><li data-i18n="s1d">Controlo documental e logístico</li><li data-i18n="s1e">Entregas door-to-door</li></ul></div>
+    <div class="sc rv" data-tilt><div class="sc-bar"></div><div class="sc-glow"></div><div class="sc-corner">SRV-002</div><span class="sc-ico">🚢</span><div class="sc-n">02 / SHIP</div><h3 data-i18n="s2h">SHIPCHANDLER</h3><p data-i18n="s2p">Abastecimento especializado a navios, embarcações offshore, plataformas e terminais marítimos com foco em time-critical deliveries.</p><ul class="sc-ul"><li data-i18n="s2a">Víveres e provisões</li><li data-i18n="s2b">PPE e material de segurança</li><li data-i18n="s2c">Lubrificantes e cabos</li><li data-i18n="s2d">Material eléctrico e mecânico</li><li data-i18n="s2e">Itens urgentes para operação</li></ul></div>
+    <div class="sc rv" data-tilt><div class="sc-bar"></div><div class="sc-glow"></div><div class="sc-corner">SRV-003</div><span class="sc-ico">🔩</span><div class="sc-n">03 / GAS</div><h3 data-i18n="s3h">OXIGÉNIO &amp;<br>ACETILENO</h3><p data-i18n="s3p">Fornecimento contínuo, manutenção e gestão de sistemas de gases industriais para estaleiros, soldadura pesada e operações offshore.</p><ul class="sc-ul"><li data-i18n="s3a">Fornecimento de cilindros</li><li data-i18n="s3b">Recarga programada</li><li data-i18n="s3c">Inspecção técnica</li><li data-i18n="s3d">Manutenção preventiva e correctiva</li><li data-i18n="s3e">Suporte em emergência 24h</li></ul></div>
+    <div class="sc rv" data-tilt><div class="sc-bar"></div><div class="sc-glow"></div><div class="sc-corner">SRV-004</div><span class="sc-ico">👥</span><div class="sc-n">04 / CREW</div><h3 data-i18n="s4h">CREW CHANGE &amp;<br>MOBILIZAÇÃO</h3><p data-i18n="s4p">Gestão de rotação de tripulação e mobilização integrada de pessoal, ferramentas e bens em rotas estratégicas nacionais.</p><ul class="sc-ul"><li data-i18n="s4a">Transporte terrestre e marítimo</li><li data-i18n="s4b">Rotação de tripulação</li><li data-i18n="s4c">Documentação de viagem</li><li data-i18n="s4d">Transfers porto/aeroporto/base</li><li data-i18n="s4e">Acompanhamento door-to-site</li></ul></div>
+  </div>
+</section>
+
+<!-- ══ STORAGE ══ -->
+<section class="storage" id="storage">
+  <div class="sto-box">
+    <div class="sto-txt rvL">
+      <p class="tag" data-i18n="sto_tag">Infraestrutura Logística</p>
+      <h2 data-i18n="sto_h2">CAPACIDADE DE<br>ARMAZENAGEM</h2>
+      <p class="intro" data-i18n="sto_intro">A nossa infraestrutura logística em Luanda assegura capacidade robusta para material de grande volume, equipamentos críticos e consumíveis industriais — com segurança 24h e acesso controlado.</p>
+      <div class="sto-nums">
+        <div class="sto-n">
+          <div class="sto-val"><span class="counter" data-t="12000" data-sep="1">12.000</span><span class="sto-m2">m²</span></div>
+          <div><div class="sto-lb" data-i18n="sm1l">Sem Cobertura</div><div class="sto-ds" data-i18n="sm1d">Área exterior pavimentada e vedada</div></div>
+        </div>
+        <div class="sto-n">
+          <div class="sto-val"><span class="counter" data-t="400">400</span><span class="sto-m2">m²</span></div>
+          <div><div class="sto-lb" data-i18n="sm2l">Com Cobertura</div><div class="sto-ds" data-i18n="sm2d">Armazém coberto para material sensível</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sto-vis rvR">
+      <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=760&q=70&auto=format" alt="AMC Armazém" loading="lazy" decoding="async"/>
+      <div class="sto-tag" data-i18n="sto_badge">Luanda · Bairro Azul</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PARTNERS ══ -->
+<section class="partners" id="partners">
+  <div class="par-hd rv"><p class="tag c" data-i18n="par_tag">Parceiros Estratégicos</p><h2 data-i18n="par_h2">ALIADOS DE CONFIANÇA</h2><p class="intro" data-i18n="par_intro">Trabalhamos lado a lado com empresas de referência no sector marítimo e industrial em Angola.</p></div>
+  <div class="par-grid">
+    <div class="par-card rv"><span class="par-badge" data-i18n="par_badge">Parceiro Estratégico</span><div class="par-nm">DOLPHIN MARINE</div><p class="par-desc" data-i18n="dol_desc">Parceria operacional no sector de suporte marítimo offshore — combinando a nossa capacidade logística com a expertise técnica da Dolphin Marine para operações críticas nas águas angolanas. Juntos asseguramos uma cadeia de suporte marítimo completa e fiável.</p></div>
+    <div class="par-card rv"><span class="par-badge" data-i18n="par_badge">Parceiro Estratégico</span><div class="par-nm">OPEN SAFETY</div><p class="par-desc" data-i18n="safe_desc">Colaboração estratégica em segurança operacional, conformidade HSSE e fornecimento de equipamentos de protecção individual. A parceria com a Open Safety reforça o nosso compromisso com os mais elevados padrões de segurança em ambientes industriais e offshore.</p></div>
+  </div>
+</section>
+
+<!-- ══ WHY ══ -->
+<section class="why" id="about">
+  <div class="why-g">
+    <div class="why-vis rvL">
+      <img class="wi-main" src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=760&q=70&auto=format" alt="Offshore Angola" loading="lazy" decoding="async"/>
+      <img class="wi-sec" src="https://images.unsplash.com/photo-1591768793355-74d04bb6608f?w=560&q=70&auto=format" alt="AMC Equipa" loading="lazy" decoding="async"/>
+      <div class="why-badge"><div class="wb-n">100%</div><div class="wb-t" data-i18n="badge">Capital Angolano</div></div>
+    </div>
+    <div class="rvR">
+      <p class="tag" data-i18n="why_tag">Quem Somos</p>
+      <h2 data-i18n="why_h2">AUTORIDADE NAS<br>ÁGUAS ANGOLANAS</h2>
+      <p class="intro" style="margin-bottom:0" data-i18n="why_intro">Construídos para actuar nos sectores mais exigentes da economia angolana — combinando conhecimento local com padrões operacionais internacionais.</p>
+      <div class="pillars">
+        <div class="pillar"><span class="pn">01</span><div><h4 data-i18n="p1t">Conteúdo Local Categoria A</h4><p data-i18n="p1d">65% de participação angolana — em conformidade com requisitos da ANPG para procurement de Petróleo & Gás.</p></div></div>
+        <div class="pillar"><span class="pn">02</span><div><h4 data-i18n="p2t">Licenciado e Regulado</h4><p data-i18n="p2d">Registado junto da IMPA, ANPG e MINCO. Em conformidade com regulamentações MARPOL e requisitos financeiros da BNA.</p></div></div>
+        <div class="pillar"><span class="pn">03</span><div><h4 data-i18n="p3t">Cobertura Nacional</h4><p data-i18n="p3d">Activos em Luanda, Soyo, Cabinda, Lobito e Ambriz — todos os principais portos e hubs offshore de Angola.</p></div></div>
+        <div class="pillar"><span class="pn">04</span><div><h4 data-i18n="p4t">Ponto de Contacto Único</h4><p data-i18n="p4d">Um fornecedor integrado para provisões, água, engenharia, equipamentos e pessoal — reduzindo a fricção de procurement de ponta a ponta.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LOCATIONS ══ -->
+<section class="locs" id="locations">
+  <div class="loc-hd rv"><p class="tag c" data-i18n="loc_tag">Cobertura Operacional</p><h2 data-i18n="loc_h2">PRESENÇA NACIONAL</h2></div>
+  <div class="loc-grid">
+    <div class="lc rv"><span class="lci">⚓</span><div class="lcc">LUANDA</div><div class="lcr" data-i18n="lc1r">Sede</div><ul class="lcs"><li data-i18n="lc1a">HQ e Administração</li><li data-i18n="lc1b">Operações completas de chandling</li><li data-i18n="lc1c">Armazém e câmara frigorífica</li><li data-i18n="lc1d">Crewing e RH</li></ul></div>
+    <div class="lc rv"><span class="lci">🛢️</span><div class="lcc">SOYO</div><div class="lcr" data-i18n="lc2r">Hub Petróleo & Gás</div><ul class="lcs"><li data-i18n="lc2a">Ship chandling</li><li data-i18n="lc2b">Abastecimento de água</li><li data-i18n="lc2c">Crewing</li></ul></div>
+    <div class="lc rv"><span class="lci">🌊</span><div class="lcc">CABINDA</div><div class="lcr" data-i18n="lc3r">Enclave Offshore</div><ul class="lcs"><li data-i18n="lc3a">Provisões e consumíveis</li><li data-i18n="lc3b">Aluguer de equipamentos</li><li data-i18n="lc3c">Serviços de husbandry</li></ul></div>
+    <div class="lc rv"><span class="lci">🔩</span><div class="lcc">LOBITO</div><div class="lcr" data-i18n="lc4r">Hub Portuário</div><ul class="lcs"><li data-i18n="lc4a">Engenharia naval</li><li data-i18n="lc4b">Bunkering</li><li data-i18n="lc4c">Aluguer de equipamentos</li></ul></div>
+    <div class="lc rv"><span class="lci">📍</span><div class="lcc">AMBRIZ</div><div class="lcr" data-i18n="lc5r">Corredor Logístico</div><ul class="lcs"><li data-i18n="lc5a">Chandling</li><li data-i18n="lc5b">Logística de suporte</li><li data-i18n="lc5c">Mobilização</li></ul></div>
+  </div>
+</section>
+
+<!-- ══ PROCESS ══ -->
+<section class="proc" id="procurement">
+  <div class="proc-g">
+    <div class="rvL">
+      <p class="tag" data-i18n="prc_tag">Como Trabalhamos</p>
+      <h2 data-i18n="prc_h2">PROCESSO DE<br>PROCUREMENT</h2>
+      <p class="intro" data-i18n="prc_intro">A AMC opera como parceiro de supply integrado. De cada requisição à entrega no cais, cada passo é gerido, documentado e rastreado com o rigor que operações offshore exigem.</p>
+      <div class="psteps">
+        <div class="pstep"><div class="psn">01</div><div class="psc"><h4 data-i18n="ps1t">Requisição e Especificação</h4><p data-i18n="ps1d">O cliente envia uma ordem de compra. A equipa valida especificações e confirma disponibilidade em até 4 horas.</p></div></div>
+        <div class="pstep"><div class="psn">02</div><div class="psc"><h4 data-i18n="ps2t">Sourcing e Alfândega</h4><p data-i18n="ps2d">Sourcing local e internacional via fornecedores certificados. Documentação completa: DU, desalfandegamento e certificados fitossanitários.</p></div></div>
+        <div class="pstep"><div class="psn">03</div><div class="psc"><h4 data-i18n="ps3t">Controlo de Qualidade</h4><p data-i18n="ps3d">Verificação de cadeia de frio, controlo de validade, revisão de conformidade IMPA e embalagem para ambientes marítimos.</p></div></div>
+        <div class="pstep"><div class="psn">04</div><div class="psc"><h4 data-i18n="ps4t">Entrega e Documentação</h4><p data-i18n="ps4d">Entrega no cais ou offshore com guias completas, certificados de conformidade e facturação em USD ou AOA.</p></div></div>
+      </div>
+    </div>
+    <div class="certs rvR">
+      <div class="ct" data-i18n="cert_t">Certificações e Registos</div>
+      <div class="cr"><span class="cn">IMPA Licensed</span><span class="ca" data-i18n="cav">Activo</span></div>
+      <div class="cr"><span class="cn">ANPG Registered</span><span class="ca" data-i18n="cav">Activo</span></div>
+      <div class="cr"><span class="cn" data-i18n="cn3">Conteúdo Local Cat. A</span><span class="ca" data-i18n="cel">Elegível</span></div>
+      <div class="cr"><span class="cn">MARPOL Compliance</span><span class="ca" data-i18n="cce">Certificado</span></div>
+      <div class="cr"><span class="cn">MINCO Registered</span><span class="ca" data-i18n="cav">Activo</span></div>
+      <div class="cr"><span class="cn">ISO 9001</span><span class="cp" data-i18n="cpp">Em Progresso</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta-sec" id="contact">
+  <div class="rv">
+    <p class="tag c" data-i18n="cta_tag">Contacto</p>
+    <h2 data-i18n="cta_h2">PRONTO PARA SUPORTAR<br>A SUA PRÓXIMA OPERAÇÃO?</h2>
+    <div class="cta-acts">
+      <a href="mailto:info@amc-angola.com" class="btn-w" data-i18n="cta_btn">Enviar Pedido de Procurement</a>
+      <span class="cta-info">info@amc-angola.com · +244 9XX XXX XXX</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="ft">
+    <div class="fb"><span class="logo-text">AMC</span><div class="fb-lg">Ondas Marítimas — Serviços Marítimos, Lda.</div><p class="fb-tg" data-i18n="ft_tag">Parceiro integrado de fornecimento marítimo e chandling de Angola — servindo o sector offshore de Petróleo & Gás nos principais portos angolanos.</p></div>
+    <div class="fc"><h5 data-i18n="ft_srv">Serviços</h5><ul><li><a href="#services" data-i18n="ft_s1">Ship Chandling</a></li><li><a href="#services" data-i18n="ft_s2">Procurement</a></li><li><a href="#services" data-i18n="ft_s3">Oxigénio & Acetileno</a></li><li><a href="#services" data-i18n="ft_s4">Crew Change</a></li><li><a href="#storage">Armazenagem</a></li></ul></div>
+    <div class="fc"><h5 data-i18n="ft_loc">Localizações</h5><ul><li><a href="#locations">Luanda (HQ)</a></li><li><a href="#locations">Soyo</a></li><li><a href="#locations">Cabinda</a></li><li><a href="#locations">Lobito</a></li><li><a href="#locations">Ambriz</a></li></ul></div>
+    <div class="fc"><h5 data-i18n="ft_con">Contacto</h5><ul><li><a href="#">Rua dos Heróis, Ed. 18</a></li><li><a href="#">2.º Andar, Bairro Azul</a></li><li><a href="#">Luanda, Angola</a></li><li><a href="mailto:info@amc-angola.com">info@amc-angola.com</a></li></ul></div>
+  </div>
+  <div class="fb2"><p>© 2026 AMC — Ondas Marítimas, Serviços Marítimos, Lda. · Luanda, Angola</p><p data-i18n="ft_rts">Todos os direitos reservados</p></div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   TRANSLATIONS (condensed)
+══════════════════════════════════════════════════════════════ */
+const T={
+pt:{dep:'Profundidade',nav_srv:'Serviços',nav_par:'Parceiros',nav_abt:'Quem Somos',nav_loc:'Cobertura',nav_con:'Contacto',nav_cta:'Contactar',h_eye:'Soluções Integradas · Offshore · Angola',h_h1a:'PROFUNDIDADE',h_h1b:'OPERACIONAL',h_desc:'Parceiro estratégico de suporte marítimo, procurement e logística offshore em Angola. Da provisão ao cais — rastreável, seguro e a tempo.',h_cta1:'Ver Serviços',h_cta2:'Falar Connosco',h_op:'Operacional',st1:'Portos Cobertos',st2:'Resposta de Urgência',st3:'Capital Angolano',st4:'Áreas de Serviço',srv_tag:'O Que Fazemos',srv_h2:'SOLUÇÕES MARÍTIMAS INTEGRADAS',srv_intro:'Da sourcing estratégica ao cais, da tripulação ao gás industrial — um parceiro, cobertura total.',s1h:'PROCUREMENT',s1p:'Sourcing estratégico, gestão de fornecedores e aquisição de materiais críticos para operações industriais e offshore.',s1a:'Strategic sourcing',s1b:'Vendor management',s1c:'Equipamentos marítimos &amp; offshore',s1d:'Controlo documental e logístico',s1e:'Entregas door-to-door',s2h:'SHIPCHANDLER',s2p:'Abastecimento especializado a navios, embarcações offshore, plataformas e terminais marítimos com foco em time-critical deliveries.',s2a:'Víveres e provisões',s2b:'PPE e material de segurança',s2c:'Lubrificantes e cabos',s2d:'Material eléctrico e mecânico',s2e:'Itens urgentes para operação',s3h:'OXIGÉNIO &amp;<br>ACETILENO',s3p:'Fornecimento contínuo, manutenção e gestão de sistemas de gases industriais para estaleiros, soldadura pesada e operações offshore.',s3a:'Fornecimento de cilindros',s3b:'Recarga programada',s3c:'Inspecção técnica',s3d:'Manutenção preventiva e correctiva',s3e:'Suporte em emergência 24h',s4h:'CREW CHANGE &amp;<br>MOBILIZAÇÃO',s4p:'Gestão de rotação de tripulação e mobilização integrada de pessoal, ferramentas e bens em rotas estratégicas nacionais.',s4a:'Transporte terrestre e marítimo',s4b:'Rotação de tripulação',s4c:'Documentação de viagem',s4d:'Transfers porto/aeroporto/base',s4e:'Acompanhamento door-to-site',sto_tag:'Infraestrutura Logística',sto_h2:'CAPACIDADE DE<br>ARMAZENAGEM',sto_intro:'A nossa infraestrutura logística em Luanda assegura capacidade robusta para material de grande volume, equipamentos críticos e consumíveis industriais — com segurança 24h e acesso controlado.',sm1l:'Sem Cobertura',sm1d:'Área exterior pavimentada e vedada',sm2l:'Com Cobertura',sm2d:'Armazém coberto para material sensível',sto_badge:'Luanda · Bairro Azul',par_tag:'Parceiros Estratégicos',par_h2:'ALIADOS DE CONFIANÇA',par_intro:'Trabalhamos lado a lado com empresas de referência no sector marítimo e industrial em Angola.',par_badge:'Parceiro Estratégico',dol_desc:'Parceria operacional no sector de suporte marítimo offshore — combinando a nossa capacidade logística com a expertise técnica da Dolphin Marine para operações críticas nas águas angolanas. Juntos asseguramos uma cadeia de suporte marítimo completa e fiável.',safe_desc:'Colaboração estratégica em segurança operacional, conformidade HSSE e fornecimento de equipamentos de protecção individual. A parceria com a Open Safety reforça o nosso compromisso com os mais elevados padrões de segurança em ambientes industriais e offshore.',why_tag:'Quem Somos',why_h2:'AUTORIDADE NAS<br>ÁGUAS ANGOLANAS',why_intro:'Construídos para actuar nos sectores mais exigentes da economia angolana — combinando conhecimento local com padrões operacionais internacionais.',badge:'Capital Angolano',p1t:'Conteúdo Local Categoria A',p1d:'65% de participação angolana — em conformidade com requisitos da ANPG para procurement de Petróleo & Gás.',p2t:'Licenciado e Regulado',p2d:'Registado junto da IMPA, ANPG e MINCO. Em conformidade com regulamentações MARPOL e requisitos financeiros da BNA.',p3t:'Cobertura Nacional',p3d:'Activos em Luanda, Soyo, Cabinda, Lobito e Ambriz — todos os principais portos e hubs offshore de Angola.',p4t:'Ponto de Contacto Único',p4d:'Um fornecedor integrado para provisões, água, engenharia, equipamentos e pessoal — reduzindo a fricção de procurement de ponta a ponta.',loc_tag:'Cobertura Operacional',loc_h2:'PRESENÇA NACIONAL',lc1r:'Sede',lc1a:'HQ e Administração',lc1b:'Operações completas de chandling',lc1c:'Armazém e câmara frigorífica',lc1d:'Crewing e RH',lc2r:'Hub Petróleo & Gás',lc2a:'Ship chandling',lc2b:'Abastecimento de água',lc2c:'Crewing',lc3r:'Enclave Offshore',lc3a:'Provisões e consumíveis',lc3b:'Aluguer de equipamentos',lc3c:'Serviços de husbandry',lc4r:'Hub Portuário',lc4a:'Engenharia naval',lc4b:'Bunkering',lc4c:'Aluguer de equipamentos',lc5r:'Corredor Logístico',lc5a:'Chandling',lc5b:'Logística de suporte',lc5c:'Mobilização',prc_tag:'Como Trabalhamos',prc_h2:'PROCESSO DE<br>PROCUREMENT',prc_intro:'A AMC opera como parceiro de supply integrado. De cada requisição à entrega no cais, cada passo é gerido, documentado e rastreado.',ps1t:'Requisição e Especificação',ps1d:'O cliente envia uma ordem de compra. A equipa valida especificações e confirma disponibilidade em até 4 horas.',ps2t:'Sourcing e Alfândega',ps2d:'Sourcing local e internacional via fornecedores certificados. Documentação completa: DU, desalfandegamento e certificados fitossanitários.',ps3t:'Controlo de Qualidade',ps3d:'Verificação de cadeia de frio, controlo de validade, revisão de conformidade IMPA e embalagem para ambientes marítimos.',ps4t:'Entrega e Documentação',ps4d:'Entrega no cais ou offshore com guias completas, certificados de conformidade e facturação em USD ou AOA.',cert_t:'Certificações e Registos',cav:'Activo',cel:'Elegível',cce:'Certificado',cpp:'Em Progresso',cn3:'Conteúdo Local Cat. A',cta_tag:'Contacto',cta_h2:'PRONTO PARA SUPORTAR<br>A SUA PRÓXIMA OPERAÇÃO?',cta_btn:'Enviar Pedido de Procurement',ft_tag:'Parceiro integrado de fornecimento marítimo e chandling de Angola — servindo o sector offshore de Petróleo & Gás nos principais portos angolanos.',ft_srv:'Serviços',ft_s1:'Ship Chandling',ft_s2:'Procurement',ft_s3:'Oxigénio & Acetileno',ft_s4:'Crew Change',ft_loc:'Localizações',ft_con:'Contacto',ft_rts:'Todos os direitos reservados'},
+en:{dep:'Depth',nav_srv:'Services',nav_par:'Partners',nav_abt:'About',nav_loc:'Coverage',nav_con:'Contact',nav_cta:'Contact Us',h_eye:'Integrated Solutions · Offshore · Angola',h_h1a:'OPERATIONAL',h_h1b:'DEPTH',h_desc:'Strategic partner for maritime support, procurement and offshore logistics in Angola. From provision to quayside — traceable, safe and on time.',h_cta1:'Our Services',h_cta2:'Get In Touch',h_op:'Operational',st1:'Ports Covered',st2:'Emergency Response',st3:'Angolan Capital',st4:'Service Areas',srv_tag:'What We Do',srv_h2:'INTEGRATED MARITIME SOLUTIONS',srv_intro:'From strategic sourcing to quayside, from crew rotation to industrial gas — one partner, total coverage.',s1h:'PROCUREMENT',s1p:'Strategic sourcing, vendor management and critical material acquisition for industrial and offshore operations.',s1a:'Strategic sourcing',s1b:'Vendor management',s1c:'Maritime &amp; offshore equipment',s1d:'Document &amp; logistics control',s1e:'Door-to-door delivery',s2h:'SHIPCHANDLER',s2p:'Specialised provisioning for vessels, offshore craft, platforms and maritime terminals with focus on time-critical deliveries.',s2a:'Food & provisions',s2b:'PPE & safety materials',s2c:'Lubricants & cables',s2d:'Electrical & mechanical materials',s2e:'Urgent operational items',s3h:'OXYGEN &amp;<br>ACETYLENE',s3p:'Continuous supply, maintenance and management of industrial gas systems for shipyards, heavy welding and offshore operations.',s3a:'Cylinder supply',s3b:'Scheduled refilling',s3c:'Technical inspection',s3d:'Preventive & corrective maintenance',s3e:'24h emergency support',s4h:'CREW CHANGE &amp;<br>MOBILIZATION',s4p:'Crew rotation management and integrated mobilization of personnel, tools and goods across strategic national routes.',s4a:'Land & sea transport',s4b:'Crew rotation',s4c:'Travel documentation',s4d:'Port/airport/base transfers',s4e:'Door-to-site accompaniment',sto_tag:'Logistics Infrastructure',sto_h2:'STORAGE<br>CAPACITY',sto_intro:'Our logistics infrastructure in Luanda ensures robust storage capacity for large-volume materials, critical equipment and industrial consumables — with 24h security.',sm1l:'Uncovered',sm1d:'Outdoor paved and secured storage area',sm2l:'Covered',sm2d:'Indoor warehouse for sensitive materials',sto_badge:'Luanda · Bairro Azul',par_tag:'Strategic Partners',par_h2:'TRUSTED ALLIES',par_intro:'We work side by side with leading companies in the maritime and industrial sector in Angola.',par_badge:'Strategic Partner',dol_desc:"Operational partnership in the offshore maritime support sector — combining our logistics capacity with Dolphin Marine's technical expertise for critical operations in Angolan waters.",safe_desc:"Strategic collaboration on operational safety, HSSE compliance and supply of personal protective equipment. The partnership with Open Safety reinforces our commitment to the highest safety standards.",why_tag:'About Us',why_h2:'AUTHORITY ON<br>ANGOLAN WATERS',why_intro:"Built to operate in the most demanding sectors of the Angolan economy — combining local knowledge with international operational standards.",badge:'Angolan Capital',p1t:'Local Content Category A',p1d:'65% Angolan shareholding — fully compliant with ANPG local content requirements for Oil & Gas procurement.',p2t:'Licensed & Regulated',p2d:'Registered with IMPA, ANPG and MINCO. Compliant with MARPOL maritime regulations and BNA financial requirements.',p3t:'Nationwide Coverage',p3d:'Active in Luanda, Soyo, Cabinda, Lobito and Ambriz — every major port and offshore hub in Angola.',p4t:'Single Point of Contact',p4d:'One integrated supplier across provisions, water, engineering, equipment and personnel — reducing procurement friction end to end.',loc_tag:'Operational Coverage',loc_h2:'NATIONAL PRESENCE',lc1r:'Headquarters',lc1a:'HQ & Administration',lc1b:'Full chandling operations',lc1c:'Warehousing & cold storage',lc1d:'Crewing & HR',lc2r:'Oil & Gas Hub',lc2a:'Ship chandling',lc2b:'Water supply',lc2c:'Crewing',lc3r:'Offshore Enclave',lc3a:'Provisions & consumables',lc3b:'Equipment rental',lc3c:'Husbandry services',lc4r:'Port Hub',lc4a:'Naval engineering',lc4b:'Bunkering',lc4c:'Equipment rental',lc5r:'Logistics Corridor',lc5a:'Chandling',lc5b:'Logistics support',lc5c:'Mobilization',prc_tag:'How We Work',prc_h2:'PROCUREMENT<br>PROCESS',prc_intro:'AMC operates as a fully integrated supply partner. From each requisition to dockside delivery, every step is managed, documented and tracked.',ps1t:'Request & Specification',ps1d:'Client submits a purchase order. Team validates specifications and confirms availability within 4 hours.',ps2t:'Sourcing & Customs',ps2d:'Local and international sourcing via certified suppliers. Full documentation: DU, customs clearance and phytosanitary certificates.',ps3t:'Quality Control',ps3d:'Cold chain verification, expiry checks, IMPA compliance review and packaging for marine environments.',ps4t:'Delivery & Documentation',ps4d:'Dockside or offshore delivery with full delivery notes, certificates of conformity and invoicing in USD or AOA.',cert_t:'Certifications & Registrations',cav:'Active',cel:'Eligible',cce:'Certified',cpp:'In Progress',cn3:'Local Content Cat. A',cta_tag:'Contact',cta_h2:'READY TO SUPPORT<br>YOUR NEXT OPERATION?',cta_btn:'Send Procurement Request',ft_tag:"Angola's integrated maritime supply and chandling partner — serving the offshore Oil & Gas sector.",ft_srv:'Services',ft_s1:'Ship Chandling',ft_s2:'Procurement',ft_s3:'Oxygen & Acetylene',ft_s4:'Crew Change',ft_loc:'Locations',ft_con:'Contact',ft_rts:'All rights reserved'},
+fr:{dep:'Profondeur',nav_srv:'Services',nav_par:'Partenaires',nav_abt:'À Propos',nav_loc:'Couverture',nav_con:'Contact',nav_cta:'Nous Contacter',h_eye:'Solutions Intégrées · Offshore · Angola',h_h1a:'PROFONDEUR',h_h1b:'OPÉRATIONNELLE',h_desc:"Partenaire stratégique de support maritime, procurement et logistique offshore en Angola. De la provision au quai — traçable, sûr et dans les délais.",h_cta1:'Voir les Services',h_cta2:'Nous Contacter',h_op:'Opérationnel',st1:'Ports Couverts',st2:'Réponse Urgence',st3:'Capital Angolais',st4:'Domaines de Service',srv_tag:'Ce Que Nous Faisons',srv_h2:'SOLUTIONS MARITIMES INTÉGRÉES',srv_intro:"Du sourcing stratégique au quai, de l'équipage au gaz industriel — un partenaire, couverture totale.",s1h:'PROCUREMENT',s1p:"Sourcing stratégique, gestion des fournisseurs et acquisition de matériaux critiques.",s1a:'Sourcing stratégique',s1b:'Gestion des fournisseurs',s1c:'Équipements maritimes &amp; offshore',s1d:'Contrôle documentaire et logistique',s1e:'Livraison door-to-door',s2h:'SHIPCHANDLER',s2p:"Approvisionnement spécialisé pour navires, embarcations offshore et plateformes maritimes.",s2a:'Vivres et provisions',s2b:'EPI et matériel de sécurité',s2c:'Lubrifiants et câbles',s2d:'Matériel électrique et mécanique',s2e:'Articles urgents',s3h:'OXYGÈNE &amp;<br>ACÉTYLÈNE',s3p:"Fourniture continue, maintenance et gestion de systèmes de gaz industriels.",s3a:'Fourniture de cylindres',s3b:'Recharge programmée',s3c:'Inspection technique',s3d:'Maintenance préventive et corrective',s3e:'Support urgence 24h',s4h:"RELÈVE D'ÉQUIPAGE &amp;<br>MOBILISATION",s4p:"Gestion de rotation d'équipage et mobilisation intégrée du personnel.",s4a:'Transport terrestre et maritime',s4b:"Rotation d'équipage",s4c:'Documentation de voyage',s4d:'Transferts port/aéroport/base',s4e:'Accompagnement door-to-site',sto_tag:'Infrastructure Logistique',sto_h2:'CAPACITÉ DE<br>STOCKAGE',sto_intro:"Notre infrastructure logistique à Luanda assure une capacité robuste pour matériaux volumineux et équipements critiques.",sm1l:'Sans Couverture',sm1d:'Zone extérieure pavée et sécurisée',sm2l:'Couverte',sm2d:'Entrepôt couvert pour matériaux sensibles',sto_badge:'Luanda · Bairro Azul',par_tag:'Partenaires Stratégiques',par_h2:'ALLIÉS DE CONFIANCE',par_intro:'Nous travaillons côte à côte avec des entreprises de référence dans le secteur maritime et industriel en Angola.',par_badge:'Partenaire Stratégique',dol_desc:"Partenariat opérationnel dans le secteur du support maritime offshore — combinant notre capacité logistique avec l'expertise technique de Dolphin Marine.",safe_desc:"Collaboration stratégique en sécurité opérationnelle, conformité HSSE et fourniture d'EPI avec Open Safety.",why_tag:'À Propos',why_h2:'AUTORITÉ SUR<br>LES EAUX ANGOLAISES',why_intro:"Construits pour opérer dans les secteurs les plus exigeants de l'économie angolaise.",badge:'Capital Angolais',p1t:'Contenu Local Catégorie A',p1d:"65% de participation angolaise — conforme aux exigences de l'ANPG.",p2t:'Licencié et Réglementé',p2d:"Enregistré auprès de l'IMPA, ANPG et MINCO.",p3t:'Couverture Nationale',p3d:"Actifs à Luanda, Soyo, Cabinda, Lobito et Ambriz.",p4t:'Point de Contact Unique',p4d:"Un fournisseur intégré pour provisions, eau, ingénierie et personnel.",loc_tag:'Couverture Opérationnelle',loc_h2:'PRÉSENCE NATIONALE',lc1r:'Siège Social',lc1a:'Direction & Administration',lc1b:'Opérations de chandling',lc1c:'Entrepôt & chambre froide',lc1d:'Crewing & RH',lc2r:'Hub Pétrole & Gaz',lc2a:'Ship chandling',lc2b:"Approvisionnement en eau",lc2c:'Crewing',lc3r:'Enclave Offshore',lc3a:'Provisions & consommables',lc3b:"Location d'équipements",lc3c:'Consignation',lc4r:'Hub Portuaire',lc4a:'Ingénierie navale',lc4b:'Soutage',lc4c:"Location d'équipements",lc5r:'Corridor Logistique',lc5a:'Chandling',lc5b:'Support logistique',lc5c:'Mobilisation',prc_tag:'Notre Méthode',prc_h2:'PROCESSUS DE<br>PROCUREMENT',prc_intro:"AMC opère comme partenaire d'approvisionnement intégré. Chaque étape est gérée et documentée.",ps1t:'Demande et Spécification',ps1d:"Le client soumet un bon de commande. L'équipe valide en 4 heures.",ps2t:'Sourcing et Douane',ps2d:"Sourcing via fournisseurs certifiés. Documentation complète.",ps3t:'Contrôle Qualité',ps3d:'Vérification chaîne du froid, contrôle des dates et conformité IMPA.',ps4t:'Livraison et Documentation',ps4d:'Livraison au quai ou offshore avec bons complets en USD ou AOA.',cert_t:'Certifications et Enregistrements',cav:'Actif',cel:'Éligible',cce:'Certifié',cpp:'En Cours',cn3:'Contenu Local Cat. A',cta_tag:'Contact',cta_h2:'PRÊT À SOUTENIR<br>VOTRE PROCHAINE OPÉRATION?',cta_btn:'Envoyer une Demande',ft_tag:"Partenaire intégré d'approvisionnement maritime et chandling d'Angola.",ft_srv:'Services',ft_s1:'Ship Chandling',ft_s2:'Procurement',ft_s3:'Oxygène & Acétylène',ft_s4:"Relève d'Équipage",ft_loc:'Localisations',ft_con:'Contact',ft_rts:'Tous droits réservés'}
+};
+let lang='pt';
+function setLang(l){lang=l;document.documentElement.lang=l;document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase()===l));const t=T[l];document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t[k]!==undefined)el.innerHTML=t[k]})}
+
+/* ══════════════════════════════════════════════════════════════
+   OCEAN BACKGROUND CANVAS
+══════════════════════════════════════════════════════════════ */
+const OC=document.getElementById('ocean-bg');
+const OX=OC.getContext('2d');
+function resizeOC(){OC.width=innerWidth;OC.height=innerHeight}resizeOC();
+addEventListener('resize',resizeOC);
+
+// Particle class with 3 depth layers
+class OceanParticle{
+  constructor(){this.reset(true)}
+  reset(init){
+    this.z=Math.random(); // 0=far, 1=near
+    this.x=Math.random()*OC.width;
+    this.y=init?Math.random()*OC.height:OC.height+12;
+    this.r=this.z*3.2+.25;
+    this.vy=(this.z*.6+.08)*(Math.random()*.55+.12);
+    this.vx=(Math.random()-.5)*.4*this.z;
+    this.baseOp=this.z*.42+.04;
+    this.ph=Math.random()*Math.PI*2;
+    this.wobble=Math.random()*.6+.2;
+    this.type=Math.random()>.78?'glow':Math.random()>.5?'ring':'mote';
+  }
+  tick(){
+    this.y-=this.vy;this.x+=this.vx;
+    this.ph+=.008+this.z*.006;
+    this.x+=Math.sin(this.ph*this.wobble)*.55*this.z;
+    if(this.y<-15)this.reset(false);
+  }
+  draw(){
+    const op=this.baseOp*(0.55+0.45*Math.sin(this.ph));
+    if(this.type==='glow'){
+      // Soft gradient replaces per-particle canvas blur filter (very expensive) for the same soft look
+      const rr=this.r*5*(1+(1-this.z)*0.6);
+      const g=OX.createRadialGradient(this.x,this.y,0,this.x,this.y,rr);
+      g.addColorStop(0,`rgba(0,240,255,${op*.7})`);
+      g.addColorStop(.45,`rgba(0,180,220,${op*.22})`);
+      g.addColorStop(1,'rgba(0,240,255,0)');
+      OX.beginPath();OX.arc(this.x,this.y,rr,0,Math.PI*2);
+      OX.fillStyle=g;OX.fill();
+    } else if(this.type==='ring'){
+      OX.beginPath();OX.arc(this.x,this.y,this.r,0,Math.PI*2);
+      OX.strokeStyle=`rgba(0,240,255,${op})`;OX.lineWidth=this.z*.9+.2;OX.stroke();
+      if(this.r>1.4){
+        OX.beginPath();OX.arc(this.x-this.r*.3,this.y-this.r*.3,this.r*.2,0,Math.PI*2);
+        OX.fillStyle=`rgba(180,248,255,${op*.6})`;OX.fill();
+      }
+    } else {
+      OX.beginPath();OX.arc(this.x,this.y,this.r*.5+.2,0,Math.PI*2);
+      OX.fillStyle=`rgba(0,255,180,${op*.5})`;OX.fill();
+    }
+  }
+}
+
+// Bioluminescent jellyfish
+class Jelly{
+  constructor(){this.reset()}
+  reset(){
+    this.x=Math.random()*OC.width;
+    this.y=OC.height+80+Math.random()*200;
+    this.vy=Math.random()*.18+.06;
+    this.vx=(Math.random()-.5)*.12;
+    this.r=Math.random()*28+12;
+    this.ph=Math.random()*Math.PI*2;
+    this.pulseSpd=Math.random()*.02+.008;
+    this.hue=Math.random()>.6?180:150; // cyan or green
+    this.tentacles=[];
+    const tc=Math.floor(Math.random()*5)+4;
+    for(let i=0;i<tc;i++)this.tentacles.push({offset:(Math.random()-.5)*this.r,len:Math.random()*60+30,wag:Math.random()*2+1,ph:Math.random()*Math.PI*2});
+  }
+  tick(){
+    this.y-=this.vy;this.x+=this.vx+Math.sin(this.ph*.3)*.15;
+    this.ph+=this.pulseSpd;
+    this.tentacles.forEach(t=>t.ph+=.018*t.wag);
+    if(this.y<-200)this.reset();
+  }
+  draw(){
+    const pulse=0.72+0.28*Math.sin(this.ph);
+    const r=this.r*pulse;
+    const alpha=0.12+0.08*Math.sin(this.ph);
+    // Bell
+    const bg=OX.createRadialGradient(this.x,this.y,0,this.x,this.y,r);
+    bg.addColorStop(0,`hsla(${this.hue},100%,75%,${alpha*1.8})`);
+    bg.addColorStop(.6,`hsla(${this.hue},100%,65%,${alpha*0.8})`);
+    bg.addColorStop(1,`hsla(${this.hue},100%,60%,0)`);
+    OX.beginPath();OX.arc(this.x,this.y,r,Math.PI,Math.PI*2);
+    OX.fillStyle=bg;OX.fill();
+    // Rim glow
+    OX.beginPath();OX.arc(this.x,this.y,r,.95*Math.PI,Math.PI*2.05);
+    OX.strokeStyle=`hsla(${this.hue},100%,80%,${alpha*3})`;OX.lineWidth=1.5;OX.stroke();
+    // Tentacles
+    this.tentacles.forEach(t=>{
+      OX.beginPath();OX.moveTo(this.x+t.offset,this.y);
+      const cp1x=this.x+t.offset+Math.sin(t.ph)*18;
+      const cp1y=this.y+t.len*.35;
+      const cp2x=this.x+t.offset+Math.sin(t.ph+1.2)*12;
+      const cp2y=this.y+t.len*.7;
+      OX.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,this.x+t.offset+Math.sin(t.ph+2.4)*8,this.y+t.len);
+      OX.strokeStyle=`hsla(${this.hue},100%,78%,${alpha*1.6})`;
+      OX.lineWidth=.6;OX.stroke();
+    });
+  }
+}
+
+// Horizontal depth scan band
+let scanY=0;
+const particles=Array.from({length:90},()=>new OceanParticle());
+const jellies=Array.from({length:4},()=>new Jelly());
+
+let oceanLastT=0;
+function renderOcean(t){
+  requestAnimationFrame(renderOcean);
+  if(document.hidden)return;
+  // Cap to ~30fps — background ambience doesn't need 60fps and this halves canvas work
+  if(t-oceanLastT<33)return;
+  oceanLastT=t;
+  OX.clearRect(0,0,OC.width,OC.height);
+  // Subtle scanlines (coarser step = far fewer fillRect calls, same visual effect)
+  for(let y=0;y<OC.height;y+=6){
+    const brightness=.004+.002*Math.sin((y+scanY)*.035);
+    OX.fillStyle=`rgba(0,240,255,${brightness})`;
+    OX.fillRect(0,y,OC.width,2);
+  }
+  scanY+=.5;
+  // Depth gradient overlay
+  const dg=OX.createLinearGradient(0,0,0,OC.height);
+  dg.addColorStop(0,'rgba(0,240,255,.008)');
+  dg.addColorStop(.5,'rgba(0,4,8,.02)');
+  dg.addColorStop(1,'rgba(0,4,8,.06)');
+  OX.fillStyle=dg;OX.fillRect(0,0,OC.width,OC.height);
+  // Far layer (dim, slow, blurred by filter on draw)
+  particles.forEach(p=>{p.tick();p.draw()});
+  // Jellies
+  jellies.forEach(j=>{j.tick();j.draw()});
+}
+requestAnimationFrame(renderOcean);
+
+/* ══════════════════════════════════════════════════════════════
+   CURSOR CANVAS SYSTEM
+══════════════════════════════════════════════════════════════ */
+const CC=document.getElementById('cursor-cv');
+const CX=CC.getContext('2d');
+const isCoarsePointer=matchMedia('(pointer:coarse)').matches;
+function resizeCC(){CC.width=innerWidth;CC.height=innerHeight}resizeCC();
+addEventListener('resize',resizeCC);
+
+// Pre-render a soft glow sprite once and reuse via drawImage instead of
+// creating a new radial gradient (or using shadowBlur) on every single
+// frame for every trail point — this is the biggest cost cut for the cursor fx.
+const glowSprite=document.createElement('canvas');
+glowSprite.width=glowSprite.height=64;
+(function(){
+  const gx=glowSprite.getContext('2d');
+  const g=gx.createRadialGradient(32,32,0,32,32,32);
+  g.addColorStop(0,'rgba(0,240,255,1)');
+  g.addColorStop(.4,'rgba(0,240,255,.5)');
+  g.addColorStop(1,'rgba(0,240,255,0)');
+  gx.fillStyle=g;gx.beginPath();gx.arc(32,32,32,0,Math.PI*2);gx.fill();
+})();
+
+let mx=innerWidth/2,my=innerHeight/2;
+let tx=mx,ty=my; // ring position (lagged)
+let tx2=mx,ty2=my; // outer ring (more lagged)
+const TRAIL=[];
+const TRAIL_MAX=12;
+let isHover=false;
+let clickRipples=[];
+
+if(!isCoarsePointer){
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+document.addEventListener('click',e=>{
+  clickRipples.push({x:e.clientX,y:e.clientY,r:0,max:120,op:0.85,rings:[{r:0,op:.8},{r:0,op:.55},{r:0,op:.35}]});
+});
+document.querySelectorAll('a,button,.sc,.par-card,.lc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>isHover=true);
+  el.addEventListener('mouseleave',()=>isHover=false);
+});
+}
+
+function renderCursor(){
+  if(isCoarsePointer||document.hidden){requestAnimationFrame(renderCursor);return}
+  CX.clearRect(0,0,CC.width,CC.height);
+
+  // Smooth lag
+  tx+=(mx-tx)*.12;ty+=(my-ty)*.12;
+  tx2+=(mx-tx2)*.06;ty2+=(my-ty2)*.06;
+
+  // Trail — reuses one pre-rendered glow sprite via drawImage instead of
+  // building a brand-new radial gradient for every point every frame
+  TRAIL.push({x:mx,y:my});
+  if(TRAIL.length>TRAIL_MAX)TRAIL.shift();
+  for(let i=0;i<TRAIL.length;i++){
+    const p=TRAIL[i];
+    const progress=i/TRAIL_MAX;
+    const size=progress*2.8*3*2;
+    if(size<=0)continue;
+    CX.globalAlpha=progress*.35;
+    CX.drawImage(glowSprite,p.x-size/2,p.y-size/2,size,size);
+  }
+  CX.globalAlpha=1;
+
+  // Inner dot — glow via sprite instead of shadowBlur (shadowBlur is one of
+  // the most expensive canvas operations, especially redrawn every frame)
+  const dotR=isHover?6:4;
+  CX.drawImage(glowSprite,mx-dotR*2.6,my-dotR*2.6,dotR*5.2,dotR*5.2);
+  CX.beginPath();CX.arc(mx,my,dotR,0,Math.PI*2);
+  CX.fillStyle='rgba(0,240,255,1)';CX.fill();
+
+  // Inner ring
+  const ir=isHover?18:10;
+  CX.beginPath();CX.arc(tx,ty,ir,0,Math.PI*2);
+  CX.strokeStyle=`rgba(0,240,255,${isHover?.9:.6})`;CX.lineWidth=isHover?1.5:1;CX.stroke();
+
+  // Outer ring with rotation
+  const or=isHover?52:34;
+  CX.save();CX.translate(tx2,ty2);CX.rotate(Date.now()*.001);
+  // Dashed outer ring
+  CX.setLineDash([4,8]);CX.beginPath();CX.arc(0,0,or,0,Math.PI*2);
+  CX.strokeStyle=`rgba(0,240,255,${isHover?.55:.28})`;CX.lineWidth=1;CX.stroke();
+  CX.setLineDash([]);
+  // Corner ticks
+  if(isHover){
+    [[or,0],[0,or],[-or,0],[0,-or]].forEach(([cx2,cy2])=>{
+      CX.beginPath();CX.moveTo(cx2*.75,cy2*.75);CX.lineTo(cx2*.92,cy2*.92);
+      CX.strokeStyle='rgba(0,240,255,.9)';CX.lineWidth=2;CX.stroke();
+    });
+  }
+  CX.restore();
+
+  // Click ripples
+  clickRipples=clickRipples.filter(rp=>{
+    rp.rings.forEach((ring,i)=>{
+      ring.r+=3.5+i*1.2;
+      ring.op*=.94;
+      CX.beginPath();CX.arc(rp.x,rp.y,ring.r,0,Math.PI*2);
+      CX.strokeStyle=`rgba(0,240,255,${ring.op})`;
+      CX.lineWidth=1.5-i*.3;CX.stroke();
+    });
+    return rp.rings[rp.rings.length-1].op>.01;
+  });
+
+  requestAnimationFrame(renderCursor);
+}
+renderCursor();
+
+/* ══════════════════════════════════════════════════════════════
+   HERO SLIDESHOW — 7 slides
+══════════════════════════════════════════════════════════════ */
+const slides=document.querySelectorAll('.hs');
+const sdEl=document.getElementById('sdots');
+let curSlide=0;
+function loadSlideBg(i){
+  const s=slides[i];
+  if(s.dataset.bg){
+    s.style.backgroundImage=`url('${s.dataset.bg}')`;
+    delete s.dataset.bg;
+  }
+}
+loadSlideBg(0);loadSlideBg(1); // first slide is visible immediately, preload the next one only
+slides.forEach((_,i)=>{
+  const d=document.createElement('div');d.className='sd'+(i===0?' on':'');
+  d.onclick=()=>goSlide(i);sdEl.appendChild(d);
+});
+function goSlide(n){
+  slides[curSlide].classList.remove('on');sdEl.children[curSlide].classList.remove('on');
+  curSlide=n;slides[curSlide].classList.add('on');sdEl.children[curSlide].classList.add('on');
+  loadSlideBg((curSlide+1)%slides.length); // warm the next slide while this one is showing
+}
+setInterval(()=>goSlide((curSlide+1)%slides.length),6500);
+
+/* ══════════════════════════════════════════════════════════════
+   NAV + DEPTH METER
+══════════════════════════════════════════════════════════════ */
+const navEl=document.getElementById('nav');
+const dmFill=document.getElementById('dmFill');
+const dmVal=document.getElementById('dmVal');
+const dmMeter=document.getElementById('depth-meter');
+const dmBubs=document.getElementById('dmBubs');
+
+// Spawn depth meter bubbles
+setInterval(()=>{
+  const b=document.createElement('div');b.className='dm-bub';
+  b.style.left=(Math.random()*8)+'px';
+  b.style.animationDuration=(2+Math.random()*2)+'s';
+  b.style.animationDelay=(Math.random()*.5)+'s';
+  dmBubs.appendChild(b);setTimeout(()=>b.remove(),4000);
+},800);
+
+let lastScroll=0;
+window.addEventListener('scroll',()=>{
+  const sy=scrollY;
+  navEl.classList.toggle('deep',sy>60);
+  if(sy>200)dmMeter.classList.add('visible');
+  const pct=Math.min(sy/(document.body.scrollHeight-innerHeight),1);
+  dmFill.style.height=(pct*100)+'%';
+  const depth=Math.round(pct*200);
+  dmVal.textContent=String(depth).padStart(3,'0')+'m';
+  lastScroll=sy;
+});
+
+/* ══════════════════════════════════════════════════════════════
+   HERO PARALLAX — 6 independent layers
+══════════════════════════════════════════════════════════════ */
+const hPlx=document.getElementById('hPlx');
+const hStack=document.getElementById('hStack');
+const causticsEl=document.querySelector('.caustics');
+const shaftsEl=document.querySelector('.shafts');
+const grid3El=document.querySelector('.grid3');
+
+document.addEventListener('mousemove',e=>{
+  const hero=document.getElementById('home');
+  if(!hero)return;
+  const rect=hero.getBoundingClientRect();
+  if(rect.bottom<0)return;
+  const dx=(e.clientX/innerWidth-.5);
+  const dy=(e.clientY/innerHeight-.5);
+  // Layer 1: content (most movement)
+  hPlx.style.transform=`perspective(1400px) rotateX(${-dy*6}deg) rotateY(${dx*8}deg) translateZ(0)`;
+  // Layer 2: shafts
+  shaftsEl.style.transform=`translateX(${dx*28}px) translateY(${dy*10}px)`;
+  // Layer 3: caustics
+  causticsEl.style.transform=`translateX(${dx*16}px) translateY(${dy*8}px)`;
+  // Layer 4: grid (subtle)
+  grid3El.style.transform=`translateX(${dx*6}px)`;
+  // Layer 5: slide stack (very subtle, creates stereoscopic feel)
+  hStack.style.transform=`translateX(${dx*-6}px) translateY(${dy*-3}px)`;
+});
+
+/* ══════════════════════════════════════════════════════════════
+   3D TILT ON SERVICE CARDS
+══════════════════════════════════════════════════════════════ */
+document.querySelectorAll('[data-tilt]').forEach(card=>{
+  const glow=card.querySelector('.sc-glow');
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const cx2=(e.clientX-r.left)/r.width-.5;
+    const cy2=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(900px) rotateX(${-cy2*12}deg) rotateY(${cx2*14}deg) translateY(-6px) scale(1.015)`;
+    if(glow){glow.style.left=(e.clientX-r.left)+'px';glow.style.top=(e.clientY-r.top)+'px';}
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(900px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+  });
+});
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════════════════════════════ */
+const revEls=document.querySelectorAll('.rv,.rvL,.rvR');
+const revObs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*90);revObs.unobserve(e.target)}});
+},{threshold:.05});
+revEls.forEach(el=>revObs.observe(el));
+
+/* ══════════════════════════════════════════════════════════════
+   ANIMATED COUNTERS — with glow effect
+══════════════════════════════════════════════════════════════ */
+const counterEls=document.querySelectorAll('.counter');
+const cObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target;
+    const target=+el.dataset.t;
+    const useSep=el.dataset.sep==='1';
+    const dur=2600;const start=performance.now();
+    function tick(now){
+      const p=Math.min((now-start)/dur,1);
+      const ease=p===1?1:1-Math.pow(2,-10*p);
+      const val=Math.round(ease*target);
+      el.textContent=useSep?val.toLocaleString('pt-PT'):val;
+      // Glow at peak
+      el.style.textShadow=`0 0 ${40*ease}px rgba(0,240,255,${.8*ease})`;
+      if(p<1)requestAnimationFrame(tick);
+      else{el.textContent=useSep?target.toLocaleString('pt-PT'):target;el.style.textShadow=''}
+    }
+    requestAnimationFrame(tick);cObs.unobserve(el);
+  });
+},{threshold:.3});
+counterEls.forEach(c=>cObs.observe(c));
+</script>
+</body>
+</html>

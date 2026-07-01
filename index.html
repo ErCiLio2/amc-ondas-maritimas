@@ -14,7 +14,7 @@
   --white:#dff6ff;--line:rgba(0,240,255,.09);--warm:#0ff;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;height:100%}
+html{scroll-behavior:smooth;height:100%;overflow-x:hidden}
 body{background:var(--void);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
 @media(pointer:coarse){body{cursor:auto}#cursor-cv{display:none}}
 ::selection{background:rgba(0,240,255,.2);color:var(--white)}
@@ -30,11 +30,13 @@ body{background:var(--void);color:var(--text);font-family:'Outfit',sans-serif;fo
    DEPTH METER
 ══════════════════════════════════ */
 #depth-meter{
+  display:none;
   position:fixed;right:28px;top:50%;transform:translateY(-50%);
-  z-index:800;display:flex;flex-direction:column;align-items:center;gap:8px;
+  z-index:800;flex-direction:column;align-items:center;gap:8px;
   opacity:0;transition:opacity .8s;
 }
 #depth-meter.visible{opacity:1}
+@media(min-width:1100px){#depth-meter{display:flex}}
 .dm-label{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:3px;color:rgba(0,240,255,.35);writing-mode:vertical-rl;text-transform:uppercase}
 .dm-track{width:1px;height:160px;background:rgba(0,240,255,.08);position:relative}
 .dm-fill{position:absolute;top:0;left:0;width:1px;background:linear-gradient(180deg,var(--neon),var(--bio));transition:height .4s;box-shadow:0 0 8px var(--neon)}
@@ -51,7 +53,7 @@ body{background:var(--void);color:var(--text);font-family:'Outfit',sans-serif;fo
 nav{
   position:fixed;top:0;left:0;right:0;z-index:700;
   display:flex;align-items:center;justify-content:space-between;
-  padding:20px 64px;transition:all .5s;
+  padding:14px 18px;transition:all .5s;
 }
 nav.deep{
   background:rgba(0,4,8,.97);
@@ -60,7 +62,7 @@ nav.deep{
 }
 .nav-logo{display:flex;align-items:center;gap:0;position:relative}
 .logo-text{
-  font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:12px;
+  font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:8px;
   color:var(--white);line-height:1;
   text-shadow:0 0 40px var(--glow),0 0 80px rgba(0,240,255,.15);
 }
@@ -68,27 +70,69 @@ nav.deep{
 .logo-sonar::before,.logo-sonar::after{content:'';position:absolute;inset:0;border-radius:50%;border:1px solid var(--neon);animation:lsonar 2.5s ease-out infinite}
 .logo-sonar::after{animation-delay:1.25s}
 @keyframes lsonar{0%{transform:scale(1);opacity:.8}100%{transform:scale(4);opacity:0}}
-.nav-center{display:flex;gap:36px;list-style:none}
-.nav-center a{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all .25s;position:relative}
+
+/* Hamburger toggle — mobile/tablet only */
+.nav-toggle{
+  display:flex;flex-direction:column;justify-content:center;gap:5px;
+  width:36px;height:36px;background:none;border:none;cursor:pointer;
+  padding:0;z-index:701;flex-shrink:0;
+}
+.nav-toggle span{display:block;width:100%;height:2px;background:var(--neon);box-shadow:0 0 6px var(--neon);transition:transform .3s,opacity .3s}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle.open span:nth-child(2){opacity:0}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* Mobile nav drawer */
+.nav-menu{
+  position:fixed;top:0;right:0;height:100dvh;width:min(78vw,320px);
+  background:rgba(0,4,8,.98);border-left:1px solid var(--line);backdrop-filter:blur(18px);
+  display:flex;flex-direction:column;justify-content:center;gap:44px;padding:80px 40px;
+  transform:translateX(100%);transition:transform .45s ease,visibility .45s;z-index:699;
+  overflow-y:auto;visibility:hidden;
+}
+.nav-menu.open{transform:translateX(0);visibility:visible}
+.nav-center{display:flex;flex-direction:column;gap:26px;list-style:none}
+.nav-center a{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all .25s;position:relative}
 .nav-center a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--neon);box-shadow:0 0 6px var(--neon);transition:width .3s}
 .nav-center a:hover{color:var(--neon)}
 .nav-center a:hover::after{width:100%}
-.nav-right{display:flex;align-items:center;gap:20px}
+.nav-right{display:flex;flex-direction:column;align-items:flex-start;gap:24px}
 .lang-sw{display:flex;border:1px solid var(--line)}
 .lb{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;background:none;border:none;color:var(--muted);cursor:pointer;padding:5px 11px;transition:all .2s}
 .lb.on{background:var(--neon);color:var(--void)}
 .lb:hover:not(.on){color:var(--neon)}
-.nav-btn{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--void);background:var(--neon);text-decoration:none;padding:10px 24px;transition:all .3s;box-shadow:0 0 24px rgba(0,240,255,.3)}
+.nav-btn{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--void);background:var(--neon);text-decoration:none;padding:12px 24px;transition:all .3s;box-shadow:0 0 24px rgba(0,240,255,.3);text-align:center}
 .nav-btn:hover{box-shadow:0 0 48px rgba(0,240,255,.6);transform:translateY(-1px)}
+@media(min-width:1100px){.nav-btn{font-size:11px;padding:10px 24px}}
+
+@media(min-width:768px){
+  nav{padding:18px 32px}
+  .logo-text{font-size:34px;letter-spacing:10px}
+}
+@media(min-width:1100px){
+  nav{padding:20px 64px}
+  .logo-text{font-size:40px;letter-spacing:12px}
+  .nav-toggle{display:none}
+  .nav-menu{
+    position:static;height:auto;width:auto;background:none;border:none;backdrop-filter:none;
+    flex-direction:row;align-items:center;justify-content:flex-end;gap:36px;padding:0;
+    transform:none;flex:1;overflow:visible;visibility:visible;
+  }
+  .nav-center{flex-direction:row;gap:36px}
+  .nav-center a{font-size:11px}
+  .nav-right{flex-direction:row;align-items:center;gap:20px}
+}
 
 /* ══════════════════════════════════
    HERO
 ══════════════════════════════════ */
 .hero{
-  min-height:100vh;position:relative;
-  display:flex;align-items:center;padding:0 64px 100px;
+  min-height:100dvh;position:relative;
+  display:flex;align-items:center;padding:90px 20px 64px;
   overflow:hidden;perspective:1400px;
 }
+@media(min-width:768px){.hero{padding:0 32px 80px}}
+@media(min-width:1100px){.hero{padding:0 64px 100px}}
 
 /* Slide stack */
 .hero-stack{position:absolute;inset:0;z-index:1;transform-style:preserve-3d}
@@ -144,21 +188,26 @@ nav.deep{
 
 /* Eyebrow */
 .hero-eye{
-  font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:7px;
+  font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:2.5px;
   text-transform:uppercase;color:var(--neon);text-shadow:0 0 18px var(--neon);
-  margin-bottom:30px;display:flex;align-items:center;gap:18px;
+  margin-bottom:22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
   animation:depthIn 1.4s .2s both;
 }
-.hero-eye::before{content:'';width:46px;height:1px;background:var(--neon);box-shadow:0 0 10px var(--neon);flex-shrink:0}
+.hero-eye::before{content:'';width:32px;height:1px;background:var(--neon);box-shadow:0 0 10px var(--neon);flex-shrink:0}
+@media(min-width:768px){
+  .hero-eye{font-size:10px;letter-spacing:7px;gap:18px;margin-bottom:30px;flex-wrap:nowrap}
+  .hero-eye::before{width:46px}
+}
 @keyframes depthIn{from{opacity:0;transform:translateZ(-80px) translateY(40px)}to{opacity:1;transform:translateZ(0) translateY(0)}}
 
 /* Hero h1 */
 .hero h1{
   font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(88px,12.5vw,188px);
-  line-height:.82;letter-spacing:2px;color:var(--white);margin-bottom:40px;
+  font-size:clamp(52px,16vw,188px);
+  line-height:.86;letter-spacing:1px;color:var(--white);margin-bottom:28px;
   animation:depthIn 1.4s .45s both;
 }
+@media(min-width:768px){.hero h1{font-size:clamp(88px,12.5vw,188px);line-height:.82;letter-spacing:2px;margin-bottom:40px}}
 .hero h1 .gline{
   display:block;color:var(--neon);
   text-shadow:0 0 80px rgba(0,240,255,.55),0 0 160px rgba(0,240,255,.2);
@@ -192,13 +241,15 @@ nav.deep{
 .btn-g:hover{border-color:var(--neon);background:rgba(0,240,255,.1);box-shadow:0 0 32px rgba(0,240,255,.18);transform:translateY(-3px)}
 
 /* Slide dots */
-.sdots{position:absolute;bottom:50px;right:64px;z-index:20;display:flex;gap:12px}
+.sdots{position:absolute;bottom:22px;right:20px;z-index:20;display:flex;gap:10px}
+@media(min-width:768px){.sdots{bottom:50px;right:64px;gap:12px}}
 .sd{width:24px;height:2px;background:rgba(0,240,255,.18);cursor:pointer;transition:all .4s;position:relative;overflow:hidden}
 .sd::after{content:'';position:absolute;top:0;left:-100%;height:100%;width:100%;background:var(--neon);box-shadow:0 0 8px var(--neon);transition:left .4s}
 .sd.on{width:56px}.sd.on::after{left:0}
 
 /* Sonar + scroll */
-.hero-sonar{position:absolute;bottom:54px;left:64px;z-index:20;display:flex;align-items:center;gap:16px;animation:depthIn 1.6s 1.6s both}
+.hero-sonar{position:absolute;bottom:22px;left:20px;z-index:20;display:flex;align-items:center;gap:16px;animation:depthIn 1.6s 1.6s both}
+@media(min-width:768px){.hero-sonar{bottom:54px;left:64px}}
 .sonar-wrap{width:52px;height:52px;position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sonar-wrap::before,.sonar-wrap::after,.sonar-r3{content:'';position:absolute;border:1px solid rgba(0,240,255,.22);border-radius:50%;animation:sonarOut 2.8s ease-out infinite}
 .sonar-wrap::before{inset:0;animation-delay:0s}
@@ -213,25 +264,39 @@ nav.deep{
 ══════════════════════════════════ */
 .stats{
   position:relative;z-index:100;
-  display:grid;grid-template-columns:repeat(4,1fr);
+  display:grid;grid-template-columns:repeat(2,1fr);
   background:rgba(0,8,16,.97);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
   backdrop-filter:blur(18px);
 }
 .si{
-  padding:40px 44px;border-right:1px solid var(--line);
+  padding:26px 22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
   position:relative;overflow:hidden;transition:background .5s;
 }
-.si:last-child{border-right:none}
+.si:nth-child(2n){border-right:none}
 .si:hover{background:rgba(0,240,255,.025)}
 .si::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--neon);box-shadow:0 0 10px var(--neon);transition:width .7s}
 .si:hover::after{width:100%}
 .sn{
-  font-family:'Bebas Neue',sans-serif;font-size:62px;letter-spacing:2px;
-  color:var(--white);line-height:.9;margin-bottom:10px;
+  font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;
+  color:var(--white);line-height:.9;margin-bottom:8px;
   display:flex;align-items:flex-start;gap:4px;
 }
-.ss{font-size:28px;color:var(--neon);margin-top:8px;text-shadow:0 0 12px var(--neon)}
-.sl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
+.ss{font-size:20px;color:var(--neon);margin-top:5px;text-shadow:0 0 12px var(--neon)}
+.sl{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+@media(min-width:768px){
+  .si{padding:34px 32px}
+  .sn{font-size:52px;letter-spacing:2px}
+  .ss{font-size:24px}
+  .sl{font-size:10px;letter-spacing:4px}
+}
+@media(min-width:1100px){
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .si{padding:40px 44px;border-bottom:none}
+  .si:nth-child(2n){border-right:1px solid var(--line)}
+  .si:last-child{border-right:none}
+  .sn{font-size:62px}
+  .ss{font-size:28px;margin-top:8px}
+}
 
 /* ══════════════════════════════════
    SECTION BASE
@@ -262,15 +327,27 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-s
 /* ══════════════════════════════════
    SERVICES — 3D TILT CARDS
 ══════════════════════════════════ */
-.services{padding:130px 64px;background:var(--abyss)}
-.srv-hd{text-align:center;margin-bottom:88px}
+.services{padding:64px 20px;background:var(--abyss)}
+.srv-hd{text-align:center;margin-bottom:48px}
 .srv-hd .intro{margin:0 auto}
-.srv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.srv-grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
 .sc{
-  background:var(--deep);padding:54px 36px;
+  background:var(--deep);padding:38px 26px;
   position:relative;overflow:hidden;transition:background .5s;
   transform-style:preserve-3d;transform:perspective(900px) rotateX(0) rotateY(0);
   will-change:transform;
+}
+@media(min-width:768px){
+  .services{padding:90px 32px}
+  .srv-hd{margin-bottom:64px}
+  .srv-grid{grid-template-columns:repeat(2,1fr)}
+  .sc{padding:46px 32px}
+}
+@media(min-width:1100px){
+  .services{padding:130px 64px}
+  .srv-hd{margin-bottom:88px}
+  .srv-grid{grid-template-columns:repeat(4,1fr)}
+  .sc{padding:54px 36px}
 }
 .sc:hover{background:rgba(0,32,56,.6)}
 .sc-bar{position:absolute;top:0;left:0;width:0;height:2px;background:var(--neon);box-shadow:0 0 18px var(--neon),0 0 36px rgba(0,240,255,.3);transition:width .55s}
@@ -297,41 +374,72 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-s
 /* ══════════════════════════════════
    STORAGE
 ══════════════════════════════════ */
-.storage{padding:0 64px 130px;background:var(--abyss)}
-.sto-box{border:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;overflow:hidden;position:relative;background:var(--deep)}
+.storage{padding:0 20px 64px;background:var(--abyss)}
+.sto-box{border:1px solid var(--line);display:grid;grid-template-columns:1fr;overflow:hidden;position:relative;background:var(--deep)}
 .sto-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--neon) 50%,transparent 100%);box-shadow:0 0 24px var(--neon)}
 .sto-box::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,240,255,.03) 0%,transparent 55%);pointer-events:none}
-.sto-txt{padding:88px 68px;position:relative;z-index:1}
-.sto-txt .intro{margin-top:22px;margin-bottom:52px}
-.sto-nums{display:flex;flex-direction:column;gap:36px}
-.sto-n{display:flex;align-items:center;gap:32px;padding-bottom:36px;border-bottom:1px solid var(--line)}
+.sto-txt{padding:44px 26px;position:relative;z-index:1}
+.sto-txt .intro{margin-top:18px;margin-bottom:32px}
+.sto-nums{display:flex;flex-direction:column;gap:28px}
+.sto-n{display:flex;align-items:center;gap:22px;padding-bottom:28px;border-bottom:1px solid var(--line)}
 .sto-n:last-child{border-bottom:none;padding-bottom:0}
 .sto-val{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,5.5vw,80px);
-  color:var(--white);line-height:1;display:flex;align-items:flex-end;gap:8px;min-width:240px;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,11vw,80px);
+  color:var(--white);line-height:1;display:flex;align-items:flex-end;gap:6px;min-width:0;
 }
-.sto-m2{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--neon);text-shadow:0 0 14px var(--neon);margin-bottom:7px}
-.sto-lb{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
-.sto-ds{font-size:13px;color:rgba(77,141,168,.55);margin-top:5px}
-.sto-vis{position:relative;overflow:hidden;background:var(--void)}
+.sto-m2{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--neon);text-shadow:0 0 14px var(--neon);margin-bottom:5px}
+.sto-lb{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
+.sto-ds{font-size:12px;color:rgba(77,141,168,.55);margin-top:4px}
+.sto-vis{position:relative;overflow:hidden;background:var(--void);min-height:240px}
+@media(min-width:768px){
+  .storage{padding:0 32px 90px}
+  .sto-txt{padding:56px 44px}
+  .sto-val{min-width:200px;gap:8px}
+  .sto-m2{font-size:28px}
+}
+@media(min-width:1100px){
+  .storage{padding:0 64px 130px}
+  .sto-box{grid-template-columns:1fr 1fr}
+  .sto-txt{padding:88px 68px}
+  .sto-txt .intro{margin-top:22px;margin-bottom:52px}
+  .sto-nums{gap:36px}
+  .sto-n{gap:32px;padding-bottom:36px}
+  .sto-val{font-size:clamp(52px,5.5vw,80px);min-width:240px}
+  .sto-m2{font-size:32px;margin-bottom:7px}
+  .sto-lb{font-size:11px;letter-spacing:3px}
+  .sto-ds{font-size:13px;margin-top:5px}
+  .sto-vis{min-height:0}
+}
 .sto-vis img{width:100%;height:100%;object-fit:cover;opacity:.5;filter:saturate(.45) brightness(.7);transform:scale(1.05);transition:transform 8s ease}
 .sto-vis:hover img{transform:scale(1)}
 .sto-vis::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--deep) 0%,transparent 32%)}
 .sto-vis::after{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(0deg,rgba(0,4,8,.65) 0%,transparent 50%)}
-.sto-tag{position:absolute;bottom:36px;left:36px;z-index:3;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--neon);border:1px solid rgba(0,240,255,.28);padding:7px 18px}
+.sto-tag{position:absolute;bottom:18px;left:18px;z-index:3;font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--neon);border:1px solid rgba(0,240,255,.28);padding:6px 14px}
+@media(min-width:768px){.sto-tag{bottom:36px;left:36px;font-size:10px;letter-spacing:4px;padding:7px 18px}}
 
 /* ══════════════════════════════════
    PARTNERS
 ══════════════════════════════════ */
-.partners{padding:130px 64px;background:var(--trench);border-top:1px solid var(--line);position:relative;overflow:hidden}
+.partners{padding:64px 20px;background:var(--trench);border-top:1px solid var(--line);position:relative;overflow:hidden}
 .partners::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,240,255,.03) 0%,transparent 65%);pointer-events:none}
-.par-hd{text-align:center;margin-bottom:72px}
+.par-hd{text-align:center;margin-bottom:44px}
 .par-hd .intro{margin:0 auto}
-.par-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1040px;margin:0 auto}
+.par-grid{display:grid;grid-template-columns:1fr;gap:20px;max-width:1040px;margin:0 auto}
 .par-card{
-  background:rgba(0,8,16,.65);border:1px solid var(--line);padding:64px;
+  background:rgba(0,8,16,.65);border:1px solid var(--line);padding:34px 26px;
   position:relative;overflow:hidden;transition:all .5s;backdrop-filter:blur(12px);
   transform-style:preserve-3d;
+}
+@media(min-width:768px){
+  .partners{padding:90px 32px}
+  .par-hd{margin-bottom:64px}
+  .par-grid{grid-template-columns:repeat(2,1fr);gap:24px}
+  .par-card{padding:48px}
+}
+@media(min-width:1100px){
+  .partners{padding:130px 64px}
+  .par-hd{margin-bottom:72px}
+  .par-card{padding:64px}
 }
 .par-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(0,240,255,.07) 0%,transparent 55%);opacity:0;transition:opacity .45s}
 .par-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),transparent);transform:scaleX(0);transition:transform .5s;box-shadow:0 0 16px var(--neon)}
@@ -339,15 +447,25 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-s
 .par-card:hover::before{opacity:1}
 .par-card:hover::after{transform:scaleX(1)}
 .par-badge{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--neon);border:1px solid rgba(0,240,255,.25);padding:5px 14px;display:inline-block;margin-bottom:26px}
-.par-nm{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;color:var(--white);margin-bottom:20px;line-height:.92}
+.par-nm{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:2px;color:var(--white);margin-bottom:16px;line-height:.92}
+@media(min-width:768px){.par-nm{font-size:52px;letter-spacing:4px;margin-bottom:20px}}
 .par-desc{font-size:14px;line-height:1.88;color:var(--muted)}
 
 /* ══════════════════════════════════
    WHY AMC
 ══════════════════════════════════ */
-.why{padding:140px 64px;background:var(--abyss)}
-.why-g{display:grid;grid-template-columns:1fr 1fr;gap:110px;align-items:center;max-width:1280px;margin:0 auto}
-.why-vis{position:relative;height:640px;perspective:1100px}
+.why{padding:64px 20px;background:var(--abyss)}
+.why-g{display:grid;grid-template-columns:1fr;gap:48px;align-items:center;max-width:1280px;margin:0 auto}
+.why-vis{position:relative;height:300px;perspective:1100px}
+@media(min-width:768px){
+  .why{padding:90px 32px}
+  .why-vis{height:420px}
+}
+@media(min-width:1100px){
+  .why{padding:140px 64px}
+  .why-g{grid-template-columns:1fr 1fr;gap:110px}
+  .why-vis{height:640px}
+}
 .wi-main{
   position:absolute;top:0;left:0;width:80%;height:74%;object-fit:cover;
   filter:saturate(.55) brightness(.8);
@@ -384,10 +502,22 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-s
 /* ══════════════════════════════════
    LOCATIONS
 ══════════════════════════════════ */
-.locs{padding:120px 64px;background:var(--trench);border-top:1px solid var(--line)}
-.loc-hd{text-align:center;margin-bottom:68px}
-.loc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);max-width:1280px;margin:0 auto}
-.lc{background:var(--void);padding:44px 28px;transition:all .45s;position:relative;overflow:hidden}
+.locs{padding:64px 20px;background:var(--trench);border-top:1px solid var(--line)}
+.loc-hd{text-align:center;margin-bottom:44px}
+.loc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);max-width:1280px;margin:0 auto}
+.lc{background:var(--void);padding:28px 20px;transition:all .45s;position:relative;overflow:hidden}
+@media(min-width:768px){
+  .locs{padding:90px 32px}
+  .loc-hd{margin-bottom:56px}
+  .loc-grid{grid-template-columns:repeat(3,1fr)}
+  .lc{padding:36px 24px}
+}
+@media(min-width:1100px){
+  .locs{padding:120px 64px}
+  .loc-hd{margin-bottom:68px}
+  .loc-grid{grid-template-columns:repeat(5,1fr)}
+  .lc{padding:44px 28px}
+}
 .lc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(0,240,255,.08) 0%,transparent 65%);opacity:0;transition:opacity .45s}
 .lc:hover::before{opacity:1}
 .lc:hover{background:rgba(0,16,28,.9)}
@@ -401,18 +531,34 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-s
 /* ══════════════════════════════════
    PROCESS
 ══════════════════════════════════ */
-.proc{padding:140px 64px;background:var(--abyss)}
-.proc-g{display:grid;grid-template-columns:1fr 400px;gap:88px;max-width:1280px;margin:0 auto;align-items:start}
-.psteps{display:flex;flex-direction:column;margin-top:56px;position:relative}
-.psteps::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--neon) 0%,rgba(0,240,255,.08) 100%);box-shadow:0 0 8px rgba(0,240,255,.2)}
-.pstep{display:flex;gap:34px;padding:32px 0;border-bottom:1px solid var(--line);transition:border-color .35s}
+.proc{padding:64px 20px;background:var(--abyss)}
+.proc-g{display:grid;grid-template-columns:1fr;gap:48px;max-width:1280px;margin:0 auto;align-items:start}
+.psteps{display:flex;flex-direction:column;margin-top:40px;position:relative}
+@media(min-width:768px){
+  .proc{padding:90px 32px}
+  .psteps{margin-top:48px}
+}
+@media(min-width:1100px){
+  .proc{padding:140px 64px}
+  .proc-g{grid-template-columns:1fr 400px;gap:88px}
+  .psteps{margin-top:56px}
+}
+.psteps::before{content:'';position:absolute;left:19px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--neon) 0%,rgba(0,240,255,.08) 100%);box-shadow:0 0 8px rgba(0,240,255,.2)}
+@media(min-width:768px){.psteps::before{left:24px}}
+.pstep{display:flex;gap:18px;padding:24px 0;border-bottom:1px solid var(--line);transition:border-color .35s}
 .pstep:last-child{border-bottom:none}
 .pstep:hover{border-color:rgba(0,240,255,.22)}
-.psn{font-family:'Space Mono',monospace;font-size:11px;color:var(--neon);width:50px;height:50px;border:1px solid rgba(0,240,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s;background:rgba(0,240,255,.02)}
+.psn{font-family:'Space Mono',monospace;font-size:11px;color:var(--neon);width:40px;height:40px;border:1px solid rgba(0,240,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s;background:rgba(0,240,255,.02)}
+@media(min-width:768px){
+  .pstep{gap:34px;padding:32px 0}
+  .psn{width:50px;height:50px}
+}
 .pstep:hover .psn{border-color:var(--neon);box-shadow:0 0 28px rgba(0,240,255,.32);background:rgba(0,240,255,.06)}
 .psc h4{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--white);margin-bottom:10px}
 .psc p{font-size:13.5px;line-height:1.8;color:var(--muted)}
-.certs{background:var(--deep);border:1px solid var(--line);padding:46px;position:sticky;top:100px}
+.certs{background:var(--deep);border:1px solid var(--line);padding:30px 26px;position:static}
+@media(min-width:768px){.certs{padding:38px}}
+@media(min-width:1100px){.certs{padding:46px;position:sticky;top:100px}}
 .ct{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--neon);margin-bottom:34px;padding-bottom:18px;border-bottom:1px solid var(--line)}
 .cr{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(0,240,255,.04);font-size:13px}
 .cn{color:var(--muted)}
@@ -422,7 +568,9 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-s
 /* ══════════════════════════════════
    CTA
 ══════════════════════════════════ */
-.cta-sec{padding:140px 64px;background:var(--trench);border-top:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+.cta-sec{padding:70px 20px;background:var(--trench);border-top:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+@media(min-width:768px){.cta-sec{padding:100px 32px}}
+@media(min-width:1100px){.cta-sec{padding:140px 64px}}
 .cta-sec::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:700px;background:radial-gradient(ellipse,rgba(0,240,255,.07) 0%,transparent 65%);pointer-events:none}
 .cta-sec h2{margin-bottom:56px}
 .cta-acts{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;align-items:center}
@@ -434,7 +582,9 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.5vw,80px);letter-s
    FOOTER
 ══════════════════════════════════ */
 footer{background:rgba(0,3,8,.99);border-top:1px solid var(--line);position:relative;z-index:100}
-.ft{display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr;gap:64px;padding:88px 64px 64px}
+.ft{display:grid;grid-template-columns:1fr;gap:36px;padding:52px 22px 36px}
+@media(min-width:768px){.ft{grid-template-columns:1fr 1fr;gap:48px;padding:64px 32px}}
+@media(min-width:1100px){.ft{grid-template-columns:2.4fr 1fr 1fr 1fr;gap:64px;padding:88px 64px 64px}}
 .fb .logo-text{display:block;margin-bottom:8px;font-size:32px;letter-spacing:10px}
 .fb-lg{font-family:'Rajdhani',sans-serif;font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;opacity:.38}
 .fb-tg{font-size:13px;line-height:1.85;color:var(--muted);opacity:.5;max-width:300px}
@@ -443,36 +593,11 @@ footer{background:rgba(0,3,8,.99);border-top:1px solid var(--line);position:rela
 .fc ul li{margin-bottom:12px}
 .fc ul li a{font-size:13px;color:var(--muted);text-decoration:none;opacity:.5;transition:all .25s}
 .fc ul li a:hover{color:var(--neon);opacity:1}
-.fb2{padding:24px 64px;border-top:1px solid rgba(0,240,255,.04);display:flex;justify-content:space-between;align-items:center}
+.fb2{padding:18px 22px;border-top:1px solid rgba(0,240,255,.04);display:flex;flex-direction:column;gap:8px;text-align:center;align-items:center}
+@media(min-width:768px){.fb2{padding:24px 32px;flex-direction:row;justify-content:space-between;text-align:left}}
+@media(min-width:1100px){.fb2{padding:24px 64px}}
 .fb2 p{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;color:var(--muted);opacity:.32}
 
-/* ══════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════ */
-@media(max-width:1100px){
-  nav{padding:18px 28px}.nav-center{gap:20px}
-  .hero{padding:0 28px 100px}
-  .sdots{right:28px}.hero-sonar{left:28px}
-  .srv-grid{grid-template-columns:repeat(2,1fr)}
-  .why-g{grid-template-columns:1fr;gap:64px}.why-vis{height:380px}
-  .proc-g{grid-template-columns:1fr}.certs{position:static}
-  .loc-grid{grid-template-columns:repeat(3,1fr)}
-  .ft{grid-template-columns:1fr 1fr;gap:48px}
-  .sto-box{grid-template-columns:1fr}.sto-vis{min-height:300px}
-  .par-grid{grid-template-columns:1fr}
-  .services,.storage,.partners,.why,.locs,.proc,.cta-sec{padding-left:28px;padding-right:28px}
-  .storage{padding-left:28px;padding-right:28px}
-}
-@media(max-width:768px){
-  nav{padding:14px 18px}.nav-center,.nav-btn,.lang-sw{display:none}
-  #depth-meter{display:none}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .srv-grid,.par-grid{grid-template-columns:1fr}
-  .loc-grid{grid-template-columns:repeat(2,1fr)}
-  .ft{grid-template-columns:1fr;padding:52px 22px 36px;gap:36px}
-  .fb2{padding:18px 22px;flex-direction:column;gap:8px;text-align:center}
-  body{cursor:auto}#cursor-cv{display:none}
-}
 </style>
 </head>
 <body>
@@ -498,20 +623,25 @@ footer{background:rgba(0,3,8,.99);border-top:1px solid var(--line);position:rela
     <span class="logo-text">AMC</span>
     <div class="logo-sonar"></div>
   </div>
-  <ul class="nav-center">
-    <li><a href="#services" data-i18n="nav_srv">Serviços</a></li>
-    <li><a href="#partners" data-i18n="nav_par">Parceiros</a></li>
-    <li><a href="#about" data-i18n="nav_abt">Quem Somos</a></li>
-    <li><a href="#locations" data-i18n="nav_loc">Cobertura</a></li>
-    <li><a href="#contact" data-i18n="nav_con">Contacto</a></li>
-  </ul>
-  <div class="nav-right">
-    <div class="lang-sw">
-      <button class="lb on" onclick="setLang('pt')">PT</button>
-      <button class="lb" onclick="setLang('en')">EN</button>
-      <button class="lb" onclick="setLang('fr')">FR</button>
+  <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-menu" id="navMenu">
+    <ul class="nav-center">
+      <li><a href="#services" data-i18n="nav_srv">Serviços</a></li>
+      <li><a href="#partners" data-i18n="nav_par">Parceiros</a></li>
+      <li><a href="#about" data-i18n="nav_abt">Quem Somos</a></li>
+      <li><a href="#locations" data-i18n="nav_loc">Cobertura</a></li>
+      <li><a href="#contact" data-i18n="nav_con">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-sw">
+        <button class="lb on" onclick="setLang('pt')">PT</button>
+        <button class="lb" onclick="setLang('en')">EN</button>
+        <button class="lb" onclick="setLang('fr')">FR</button>
+      </div>
+      <a href="#contact" class="nav-btn" data-i18n="nav_cta">Contactar</a>
     </div>
-    <a href="#contact" class="nav-btn" data-i18n="nav_cta">Contactar</a>
   </div>
 </nav>
 
@@ -697,6 +827,23 @@ pt:{dep:'Profundidade',nav_srv:'Serviços',nav_par:'Parceiros',nav_abt:'Quem Som
 en:{dep:'Depth',nav_srv:'Services',nav_par:'Partners',nav_abt:'About',nav_loc:'Coverage',nav_con:'Contact',nav_cta:'Contact Us',h_eye:'Integrated Solutions · Offshore · Angola',h_h1a:'OPERATIONAL',h_h1b:'DEPTH',h_desc:'Strategic partner for maritime support, procurement and offshore logistics in Angola. From provision to quayside — traceable, safe and on time.',h_cta1:'Our Services',h_cta2:'Get In Touch',h_op:'Operational',st1:'Ports Covered',st2:'Emergency Response',st3:'Angolan Capital',st4:'Service Areas',srv_tag:'What We Do',srv_h2:'INTEGRATED MARITIME SOLUTIONS',srv_intro:'From strategic sourcing to quayside, from crew rotation to industrial gas — one partner, total coverage.',s1h:'PROCUREMENT',s1p:'Strategic sourcing, vendor management and critical material acquisition for industrial and offshore operations.',s1a:'Strategic sourcing',s1b:'Vendor management',s1c:'Maritime &amp; offshore equipment',s1d:'Document &amp; logistics control',s1e:'Door-to-door delivery',s2h:'SHIPCHANDLER',s2p:'Specialised provisioning for vessels, offshore craft, platforms and maritime terminals with focus on time-critical deliveries.',s2a:'Food & provisions',s2b:'PPE & safety materials',s2c:'Lubricants & cables',s2d:'Electrical & mechanical materials',s2e:'Urgent operational items',s3h:'OXYGEN &amp;<br>ACETYLENE',s3p:'Continuous supply, maintenance and management of industrial gas systems for shipyards, heavy welding and offshore operations.',s3a:'Cylinder supply',s3b:'Scheduled refilling',s3c:'Technical inspection',s3d:'Preventive & corrective maintenance',s3e:'24h emergency support',s4h:'CREW CHANGE &amp;<br>MOBILIZATION',s4p:'Crew rotation management and integrated mobilization of personnel, tools and goods across strategic national routes.',s4a:'Land & sea transport',s4b:'Crew rotation',s4c:'Travel documentation',s4d:'Port/airport/base transfers',s4e:'Door-to-site accompaniment',sto_tag:'Logistics Infrastructure',sto_h2:'STORAGE<br>CAPACITY',sto_intro:'Our logistics infrastructure in Luanda ensures robust storage capacity for large-volume materials, critical equipment and industrial consumables — with 24h security.',sm1l:'Uncovered',sm1d:'Outdoor paved and secured storage area',sm2l:'Covered',sm2d:'Indoor warehouse for sensitive materials',sto_badge:'Luanda · Bairro Azul',par_tag:'Strategic Partners',par_h2:'TRUSTED ALLIES',par_intro:'We work side by side with leading companies in the maritime and industrial sector in Angola.',par_badge:'Strategic Partner',dol_desc:"Operational partnership in the offshore maritime support sector — combining our logistics capacity with Dolphin Marine's technical expertise for critical operations in Angolan waters.",safe_desc:"Strategic collaboration on operational safety, HSSE compliance and supply of personal protective equipment. The partnership with Open Safety reinforces our commitment to the highest safety standards.",why_tag:'About Us',why_h2:'AUTHORITY ON<br>ANGOLAN WATERS',why_intro:"Built to operate in the most demanding sectors of the Angolan economy — combining local knowledge with international operational standards.",badge:'Angolan Capital',p1t:'Local Content Category A',p1d:'65% Angolan shareholding — fully compliant with ANPG local content requirements for Oil & Gas procurement.',p2t:'Licensed & Regulated',p2d:'Registered with IMPA, ANPG and MINCO. Compliant with MARPOL maritime regulations and BNA financial requirements.',p3t:'Nationwide Coverage',p3d:'Active in Luanda, Soyo, Cabinda, Lobito and Ambriz — every major port and offshore hub in Angola.',p4t:'Single Point of Contact',p4d:'One integrated supplier across provisions, water, engineering, equipment and personnel — reducing procurement friction end to end.',loc_tag:'Operational Coverage',loc_h2:'NATIONAL PRESENCE',lc1r:'Headquarters',lc1a:'HQ & Administration',lc1b:'Full chandling operations',lc1c:'Warehousing & cold storage',lc1d:'Crewing & HR',lc2r:'Oil & Gas Hub',lc2a:'Ship chandling',lc2b:'Water supply',lc2c:'Crewing',lc3r:'Offshore Enclave',lc3a:'Provisions & consumables',lc3b:'Equipment rental',lc3c:'Husbandry services',lc4r:'Port Hub',lc4a:'Naval engineering',lc4b:'Bunkering',lc4c:'Equipment rental',lc5r:'Logistics Corridor',lc5a:'Chandling',lc5b:'Logistics support',lc5c:'Mobilization',prc_tag:'How We Work',prc_h2:'PROCUREMENT<br>PROCESS',prc_intro:'AMC operates as a fully integrated supply partner. From each requisition to dockside delivery, every step is managed, documented and tracked.',ps1t:'Request & Specification',ps1d:'Client submits a purchase order. Team validates specifications and confirms availability within 4 hours.',ps2t:'Sourcing & Customs',ps2d:'Local and international sourcing via certified suppliers. Full documentation: DU, customs clearance and phytosanitary certificates.',ps3t:'Quality Control',ps3d:'Cold chain verification, expiry checks, IMPA compliance review and packaging for marine environments.',ps4t:'Delivery & Documentation',ps4d:'Dockside or offshore delivery with full delivery notes, certificates of conformity and invoicing in USD or AOA.',cert_t:'Certifications & Registrations',cav:'Active',cel:'Eligible',cce:'Certified',cpp:'In Progress',cn3:'Local Content Cat. A',cta_tag:'Contact',cta_h2:'READY TO SUPPORT<br>YOUR NEXT OPERATION?',cta_btn:'Send Procurement Request',ft_tag:"Angola's integrated maritime supply and chandling partner — serving the offshore Oil & Gas sector.",ft_srv:'Services',ft_s1:'Ship Chandling',ft_s2:'Procurement',ft_s3:'Oxygen & Acetylene',ft_s4:'Crew Change',ft_loc:'Locations',ft_con:'Contact',ft_rts:'All rights reserved'},
 fr:{dep:'Profondeur',nav_srv:'Services',nav_par:'Partenaires',nav_abt:'À Propos',nav_loc:'Couverture',nav_con:'Contact',nav_cta:'Nous Contacter',h_eye:'Solutions Intégrées · Offshore · Angola',h_h1a:'PROFONDEUR',h_h1b:'OPÉRATIONNELLE',h_desc:"Partenaire stratégique de support maritime, procurement et logistique offshore en Angola. De la provision au quai — traçable, sûr et dans les délais.",h_cta1:'Voir les Services',h_cta2:'Nous Contacter',h_op:'Opérationnel',st1:'Ports Couverts',st2:'Réponse Urgence',st3:'Capital Angolais',st4:'Domaines de Service',srv_tag:'Ce Que Nous Faisons',srv_h2:'SOLUTIONS MARITIMES INTÉGRÉES',srv_intro:"Du sourcing stratégique au quai, de l'équipage au gaz industriel — un partenaire, couverture totale.",s1h:'PROCUREMENT',s1p:"Sourcing stratégique, gestion des fournisseurs et acquisition de matériaux critiques.",s1a:'Sourcing stratégique',s1b:'Gestion des fournisseurs',s1c:'Équipements maritimes &amp; offshore',s1d:'Contrôle documentaire et logistique',s1e:'Livraison door-to-door',s2h:'SHIPCHANDLER',s2p:"Approvisionnement spécialisé pour navires, embarcations offshore et plateformes maritimes.",s2a:'Vivres et provisions',s2b:'EPI et matériel de sécurité',s2c:'Lubrifiants et câbles',s2d:'Matériel électrique et mécanique',s2e:'Articles urgents',s3h:'OXYGÈNE &amp;<br>ACÉTYLÈNE',s3p:"Fourniture continue, maintenance et gestion de systèmes de gaz industriels.",s3a:'Fourniture de cylindres',s3b:'Recharge programmée',s3c:'Inspection technique',s3d:'Maintenance préventive et corrective',s3e:'Support urgence 24h',s4h:"RELÈVE D'ÉQUIPAGE &amp;<br>MOBILISATION",s4p:"Gestion de rotation d'équipage et mobilisation intégrée du personnel.",s4a:'Transport terrestre et maritime',s4b:"Rotation d'équipage",s4c:'Documentation de voyage',s4d:'Transferts port/aéroport/base',s4e:'Accompagnement door-to-site',sto_tag:'Infrastructure Logistique',sto_h2:'CAPACITÉ DE<br>STOCKAGE',sto_intro:"Notre infrastructure logistique à Luanda assure une capacité robuste pour matériaux volumineux et équipements critiques.",sm1l:'Sans Couverture',sm1d:'Zone extérieure pavée et sécurisée',sm2l:'Couverte',sm2d:'Entrepôt couvert pour matériaux sensibles',sto_badge:'Luanda · Bairro Azul',par_tag:'Partenaires Stratégiques',par_h2:'ALLIÉS DE CONFIANCE',par_intro:'Nous travaillons côte à côte avec des entreprises de référence dans le secteur maritime et industriel en Angola.',par_badge:'Partenaire Stratégique',dol_desc:"Partenariat opérationnel dans le secteur du support maritime offshore — combinant notre capacité logistique avec l'expertise technique de Dolphin Marine.",safe_desc:"Collaboration stratégique en sécurité opérationnelle, conformité HSSE et fourniture d'EPI avec Open Safety.",why_tag:'À Propos',why_h2:'AUTORITÉ SUR<br>LES EAUX ANGOLAISES',why_intro:"Construits pour opérer dans les secteurs les plus exigeants de l'économie angolaise.",badge:'Capital Angolais',p1t:'Contenu Local Catégorie A',p1d:"65% de participation angolaise — conforme aux exigences de l'ANPG.",p2t:'Licencié et Réglementé',p2d:"Enregistré auprès de l'IMPA, ANPG et MINCO.",p3t:'Couverture Nationale',p3d:"Actifs à Luanda, Soyo, Cabinda, Lobito et Ambriz.",p4t:'Point de Contact Unique',p4d:"Un fournisseur intégré pour provisions, eau, ingénierie et personnel.",loc_tag:'Couverture Opérationnelle',loc_h2:'PRÉSENCE NATIONALE',lc1r:'Siège Social',lc1a:'Direction & Administration',lc1b:'Opérations de chandling',lc1c:'Entrepôt & chambre froide',lc1d:'Crewing & RH',lc2r:'Hub Pétrole & Gaz',lc2a:'Ship chandling',lc2b:"Approvisionnement en eau",lc2c:'Crewing',lc3r:'Enclave Offshore',lc3a:'Provisions & consommables',lc3b:"Location d'équipements",lc3c:'Consignation',lc4r:'Hub Portuaire',lc4a:'Ingénierie navale',lc4b:'Soutage',lc4c:"Location d'équipements",lc5r:'Corridor Logistique',lc5a:'Chandling',lc5b:'Support logistique',lc5c:'Mobilisation',prc_tag:'Notre Méthode',prc_h2:'PROCESSUS DE<br>PROCUREMENT',prc_intro:"AMC opère comme partenaire d'approvisionnement intégré. Chaque étape est gérée et documentée.",ps1t:'Demande et Spécification',ps1d:"Le client soumet un bon de commande. L'équipe valide en 4 heures.",ps2t:'Sourcing et Douane',ps2d:"Sourcing via fournisseurs certifiés. Documentation complète.",ps3t:'Contrôle Qualité',ps3d:'Vérification chaîne du froid, contrôle des dates et conformité IMPA.',ps4t:'Livraison et Documentation',ps4d:'Livraison au quai ou offshore avec bons complets en USD ou AOA.',cert_t:'Certifications et Enregistrements',cav:'Actif',cel:'Éligible',cce:'Certifié',cpp:'En Cours',cn3:'Contenu Local Cat. A',cta_tag:'Contact',cta_h2:'PRÊT À SOUTENIR<br>VOTRE PROCHAINE OPÉRATION?',cta_btn:'Envoyer une Demande',ft_tag:"Partenaire intégré d'approvisionnement maritime et chandling d'Angola.",ft_srv:'Services',ft_s1:'Ship Chandling',ft_s2:'Procurement',ft_s3:'Oxygène & Acétylène',ft_s4:"Relève d'Équipage",ft_loc:'Localisations',ft_con:'Contact',ft_rts:'Tous droits réservés'}
 };
+/* ══════════════════════════════════════════════════════════════
+   MOBILE NAV DRAWER
+══════════════════════════════════════════════════════════════ */
+const navToggle=document.getElementById('navToggle');
+const navMenu=document.getElementById('navMenu');
+function closeNavMenu(){
+  navMenu.classList.remove('open');
+  navToggle.classList.remove('open');
+  navToggle.setAttribute('aria-expanded','false');
+}
+navToggle.addEventListener('click',()=>{
+  const isOpen=navMenu.classList.toggle('open');
+  navToggle.classList.toggle('open',isOpen);
+  navToggle.setAttribute('aria-expanded',String(isOpen));
+});
+navMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeNavMenu));
+
 let lang='pt';
 function setLang(l){lang=l;document.documentElement.lang=l;document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase()===l));const t=T[l];document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t[k]!==undefined)el.innerHTML=t[k]})}
 

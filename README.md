@@ -1,15 +1,21 @@
 # AMC — Ondas Marítimas
 
-Landing page estática para a AMC, empresa de serviços marítimos e logística offshore em Angola.
+Site institucional da AMC, empresa de serviços marítimos e logística offshore em Angola, com página dedicada para cada serviço.
 
 ## Stack
 
-HTML + CSS + JS puro, sem build. Deploy estático na Vercel.
+React + Vite, React Router (rotas `/` e `/services/:slug`), react-helmet-async para SEO por página. Deploy estático na Vercel.
 
 ## Desenvolvimento local
 
-Basta abrir `index.html` no navegador, ou servir com qualquer servidor estático:
+```bash
+npm install
+npm run dev
+```
+
+## Build
 
 ```bash
-npx serve .
+npm run build
+npm run preview
 ```

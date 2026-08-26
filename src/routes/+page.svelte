@@ -105,7 +105,7 @@
 				{slides[current].eyebrow}
 			</p>
 			<h1
-				class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] transition-all duration-300"
+				class="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-white leading-[1.1] transition-all duration-300"
 				class:opacity-0={fading}
 				class:translate-y-2={fading}
 			>
@@ -130,7 +130,7 @@
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 			<div>
 				<p class="section-eyebrow mb-3">Sobre Nós</p>
-				<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-6 leading-tight">
+				<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 mb-6 leading-tight">
 					Parceiro de referência em procurement e suporte marítimo em Angola
 				</h2>
 				<p class="text-gray-600 text-base leading-relaxed mb-5">
@@ -174,7 +174,7 @@
 	<div class="max-w-7xl mx-auto px-6">
 		<div class="mb-12">
 			<p class="section-eyebrow mb-3">Serviços & Classe</p>
-			<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 max-w-xl leading-tight">
+			<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 max-w-xl leading-tight">
 				Entregámos soluções integradas a operadores de vários sectores
 			</h2>
 			<p class="text-gray-500 text-base mt-4 max-w-2xl leading-relaxed">
@@ -184,9 +184,9 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each services as svc}
 				<div class="py-8 grid grid-cols-1 md:grid-cols-[100px_1fr_auto] gap-6 items-center group hover:bg-white transition-colors px-2 -mx-2">
-					<div class="text-brand-navy/25 text-5xl font-display font-bold leading-none group-hover:text-brand-navy/50 transition-colors">{svc.num}</div>
+					<div class="text-brand-navy/25 text-5xl font-display font-normal leading-none group-hover:text-brand-navy/50 transition-colors">{svc.num}</div>
 					<div>
-						<h3 class="text-xl font-display font-bold text-gray-900 mb-1.5">{svc.title}</h3>
+						<h3 class="text-xl font-display font-normal text-gray-900 mb-1.5">{svc.title}</h3>
 						<p class="text-gray-500 text-sm leading-relaxed max-w-lg">{svc.desc}</p>
 					</div>
 					<a href="/servicos#{svc.id}" class="text-brand-navy text-sm font-semibold flex items-center gap-2 shrink-0 hover:gap-3 transition-all">
@@ -214,7 +214,7 @@
 	<div class="relative max-w-7xl mx-auto px-6 py-24">
 		<div class="max-w-xs">
 			<p class="text-brand-cyan text-[11px] font-semibold tracking-[0.25em] uppercase mb-3">Compromisso & Qualidade</p>
-			<h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-6 leading-tight">
+			<h2 class="text-3xl md:text-4xl font-display font-normal text-white mb-6 leading-tight">
 				Integramos rigor e segurança em cada operação
 			</h2>
 			<div class="space-y-2">
@@ -240,13 +240,13 @@
 	<div class="max-w-7xl mx-auto px-6">
 		<div class="mb-10">
 			<p class="section-eyebrow mb-3">Cobertura</p>
-			<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 leading-tight">Cinco corredores, norte a sul</h2>
+			<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 leading-tight">Cinco corredores, norte a sul</h2>
 		</div>
 		<div class="grid grid-cols-5 gap-px bg-gray-200 border border-gray-200">
 			{#each corridors as c, i}
 				<div class="bg-white p-6 text-center hover:bg-gray-50 transition-colors group">
 					<div class="text-gray-300 text-xs font-mono mb-2">0{i + 1}</div>
-					<div class="text-gray-900 font-display font-bold text-base group-hover:text-brand-navy transition-colors">{c}</div>
+					<div class="text-gray-900 font-display font-normal text-base group-hover:text-brand-navy transition-colors">{c}</div>
 				</div>
 			{/each}
 		</div>
@@ -263,7 +263,7 @@
 		<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
 			<div>
 				<p class="section-eyebrow mb-2">Clientes</p>
-				<h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900">Parceiros de confiança em Angola</h2>
+				<h2 class="text-2xl md:text-3xl font-display font-normal text-gray-900">Parceiros de confiança em Angola</h2>
 			</div>
 			<a href="/clientes" class="btn-outline shrink-0">Ver todos</a>
 		</div>
@@ -291,7 +291,7 @@
 	</div>
 	<div class="bg-brand-navy px-10 py-14 flex flex-col justify-center">
 		<p class="text-brand-cyan-light text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">Contacto</p>
-		<h2 class="text-3xl font-display font-bold text-white mb-4 leading-tight">
+		<h2 class="text-3xl font-display font-normal text-white mb-4 leading-tight">
 			Integre a nossa base de parceiros de serviço
 		</h2>
 		<p class="text-brand-cyan-pale text-sm leading-relaxed mb-8">
@@ -311,7 +311,7 @@
 	<div class="max-w-7xl mx-auto px-6">
 		<div class="mb-10">
 			<p class="section-eyebrow mb-3">Insights</p>
-			<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 leading-tight">
+			<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 leading-tight">
 				Leituras sobre procurement marítimo e logística offshore
 			</h2>
 		</div>
@@ -326,7 +326,7 @@
 						/>
 					</div>
 					<p class="section-eyebrow mb-2">{n.cat}</p>
-					<h3 class="text-xl font-display font-bold text-gray-900 mb-3 leading-snug group-hover:text-brand-navy transition-colors">{n.title}</h3>
+					<h3 class="text-xl font-display font-normal text-gray-900 mb-3 leading-snug group-hover:text-brand-navy transition-colors">{n.title}</h3>
 					<p class="text-gray-500 text-sm leading-relaxed mb-4">{n.excerpt}</p>
 					<a href="/insights" class="text-brand-navy text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all">
 						Ler artigo

@@ -7,7 +7,7 @@
 		<!-- Brand -->
 		<div class="sm:col-span-2 lg:col-span-1">
 			<a href="/" class="flex flex-col leading-none mb-6">
-				<span class="text-white font-display font-bold text-xl tracking-tight">Ondas Marítimas</span>
+				<span class="text-white font-display font-normal text-xl tracking-tight">Ondas Marítimas</span>
 				<span class="text-brand-cyan-light text-[9px] tracking-[0.18em] uppercase mt-1">Serviços Marítimos, Lda</span>
 			</a>
 			<p class="text-brand-cyan-pale text-sm leading-relaxed max-w-xs">

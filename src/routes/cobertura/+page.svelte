@@ -29,9 +29,9 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each corridors as c}
 				<div class="py-10 grid grid-cols-1 md:grid-cols-[140px_1fr_auto] gap-6 items-center group hover:bg-gray-50 transition-colors px-2 -mx-2">
-					<div class="text-gray-200 text-5xl font-display font-bold group-hover:text-brand-cyan-pale transition-colors">{c.num}</div>
+					<div class="text-gray-200 text-5xl font-display font-normal group-hover:text-brand-cyan-pale transition-colors">{c.num}</div>
 					<div>
-						<h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 mb-2 group-hover:text-brand-navy transition-colors">{c.name}</h2>
+						<h2 class="text-2xl md:text-3xl font-display font-normal text-gray-900 mb-2 group-hover:text-brand-navy transition-colors">{c.name}</h2>
 						<p class="text-gray-500 text-base leading-relaxed max-w-lg">{c.desc}</p>
 					</div>
 					<a href="/contactos" class="text-brand-navy text-sm font-semibold flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity hover:gap-3">
@@ -52,15 +52,15 @@
 <section class="bg-gray-50 border-t border-gray-200">
 	<div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-3 gap-px bg-gray-200 border border-gray-200">
 		<div class="bg-gray-50 p-8 text-center">
-			<div class="text-4xl font-display font-bold text-gray-900 mb-2">5</div>
+			<div class="text-4xl font-display font-normal text-gray-900 mb-2">5</div>
 			<div class="text-gray-500 text-sm">Corredores operacionais</div>
 		</div>
 		<div class="bg-white p-8 text-center">
-			<div class="text-4xl font-display font-bold text-gray-900 mb-2">24h</div>
+			<div class="text-4xl font-display font-normal text-gray-900 mb-2">24h</div>
 			<div class="text-gray-500 text-sm">Resposta a urgências</div>
 		</div>
 		<div class="bg-gray-50 p-8 text-center">
-			<div class="text-4xl font-display font-bold text-gray-900 mb-2">1</div>
+			<div class="text-4xl font-display font-normal text-gray-900 mb-2">1</div>
 			<div class="text-gray-500 text-sm">Interlocutor para toda a cobertura</div>
 		</div>
 	</div>
@@ -68,7 +68,7 @@
 
 <section class="py-12 bg-brand-navy">
 	<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-		<h2 class="text-3xl font-display font-bold text-white">Opera nalgum destes corredores?</h2>
+		<h2 class="text-3xl font-display font-normal text-white">Opera nalgum destes corredores?</h2>
 		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors whitespace-nowrap">
 			Contactar agora
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">

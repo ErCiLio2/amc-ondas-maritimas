@@ -78,8 +78,8 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 				<!-- Text — alternates sides -->
 				<div class="{idx % 2 !== 0 ? 'lg:order-2' : ''}">
-					<div class="text-brand-navy/15 text-8xl font-display font-bold leading-none mb-1 select-none">{svc.num}</div>
-					<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-2">{svc.title}</h2>
+					<div class="text-brand-navy/15 text-8xl font-display font-normal leading-none mb-1 select-none">{svc.num}</div>
+					<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 mb-2">{svc.title}</h2>
 					<p class="text-brand-navy text-[11px] font-semibold tracking-[0.2em] uppercase mb-8">{svc.subtitle}</p>
 					<ul class="divide-y divide-gray-100">
 						{#each svc.items as item}
@@ -117,7 +117,7 @@
 <section class="py-16 bg-brand-navy">
 	<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
 		<div>
-			<h2 class="text-3xl font-display font-bold text-white">Todos os serviços, uma só equipa</h2>
+			<h2 class="text-3xl font-display font-normal text-white">Todos os serviços, uma só equipa</h2>
 			<p class="text-brand-cyan-pale text-sm mt-2 max-w-md">Cada linha opera com equipa própria mas partilha o mesmo padrão de rastreabilidade, compliance documental e cultura HSSE.</p>
 		</div>
 		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors whitespace-nowrap">

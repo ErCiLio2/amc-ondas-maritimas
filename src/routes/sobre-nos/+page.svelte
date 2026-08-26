@@ -67,7 +67,7 @@
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 			<div>
 				<p class="section-eyebrow mb-4">Nossa História</p>
-				<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-8 leading-tight">
+				<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 mb-8 leading-tight">
 					Desde 2015, a operar onde a operação não pode parar
 				</h2>
 				<p class="text-gray-600 text-base leading-relaxed mb-5">
@@ -79,7 +79,7 @@
 				<div class="mt-8 border border-gray-200 bg-white p-8">
 					<p class="section-eyebrow mb-6">Marco fundador</p>
 					<div class="flex gap-6 items-start">
-						<div class="text-6xl font-display font-bold text-gray-100 leading-none select-none">2015</div>
+						<div class="text-6xl font-display font-normal text-gray-100 leading-none select-none">2015</div>
 						<div>
 							<div class="text-gray-900 font-semibold mb-1">Fundação</div>
 							<div class="text-gray-500 text-sm leading-relaxed">Constituição da Ondas Marítimas — Serviços Marítimos, Lda, com foco inicial nos corredores de Luanda e Lobito.</div>
@@ -128,7 +128,7 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each governance as g}
 				<div class="py-8 grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8">
-					<h3 class="text-gray-900 font-display font-bold text-lg leading-snug">{g.title}</h3>
+					<h3 class="text-gray-900 font-display font-normal text-lg leading-snug">{g.title}</h3>
 					<p class="text-gray-500 text-base leading-relaxed">{g.desc}</p>
 				</div>
 			{/each}
@@ -149,7 +149,7 @@
 		/>
 	</div>
 	<div class="bg-brand-navy px-10 py-14 flex flex-col justify-center">
-		<h2 class="text-3xl font-display font-bold text-white mb-4">Quer trabalhar com a Ondas Marítimas?</h2>
+		<h2 class="text-3xl font-display font-normal text-white mb-4">Quer trabalhar com a Ondas Marítimas?</h2>
 		<p class="text-brand-cyan-pale text-sm leading-relaxed mb-8">Contacte-nos para agendar uma reunião de apresentação e conhecer a nossa capacidade operacional.</p>
 		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors">
 			Agendar reunião

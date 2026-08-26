@@ -33,7 +33,7 @@
 	</div>
 	<div class="relative max-w-7xl mx-auto px-6 py-28">
 		<p class="text-brand-cyan text-[11px] font-semibold tracking-[0.25em] uppercase mb-3">A nossa abordagem</p>
-		<h1 class="text-4xl md:text-5xl font-display font-bold text-white leading-tight max-w-2xl mb-4">
+		<h1 class="text-4xl md:text-5xl font-display font-normal text-white leading-tight max-w-2xl mb-4">
 			Comprometidos a proteger as pessoas e as operações em cada corredor
 		</h1>
 		<p class="text-white/55 text-base max-w-xl leading-relaxed">
@@ -52,8 +52,8 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each pillars as p, i}
 				<div class="py-8 grid grid-cols-1 md:grid-cols-[60px_1fr_2fr] gap-6 items-start group hover:bg-gray-50 transition-colors px-2 -mx-2">
-					<div class="text-brand-navy/25 text-3xl font-display font-bold group-hover:text-brand-navy/50 transition-colors">0{i + 1}</div>
-					<h3 class="text-gray-900 font-display font-bold text-lg leading-snug">{p.title}</h3>
+					<div class="text-brand-navy/25 text-3xl font-display font-normal group-hover:text-brand-navy/50 transition-colors">0{i + 1}</div>
+					<h3 class="text-gray-900 font-display font-normal text-lg leading-snug">{p.title}</h3>
 					<p class="text-gray-500 text-base leading-relaxed">{p.desc}</p>
 				</div>
 			{/each}
@@ -69,7 +69,7 @@
 	<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 		<div>
 			<p class="section-eyebrow mb-4">HSSE</p>
-			<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-6 leading-tight">
+			<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 mb-6 leading-tight">
 				Health, Safety, Security & Environment
 			</h2>
 			<p class="text-gray-600 text-base leading-relaxed mb-5">
@@ -110,7 +110,7 @@
 
 <section class="py-14 bg-brand-navy">
 	<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-		<h2 class="text-3xl font-display font-bold text-white">Quer verificar a nossa capacidade operacional?</h2>
+		<h2 class="text-3xl font-display font-normal text-white">Quer verificar a nossa capacidade operacional?</h2>
 		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors whitespace-nowrap">
 			Solicitar reunião
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">

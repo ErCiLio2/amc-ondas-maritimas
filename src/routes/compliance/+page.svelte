@@ -19,7 +19,7 @@
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 			<div>
 				<p class="section-eyebrow mb-3">Política Anticorrupção</p>
-				<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-6 leading-tight">Tolerância zero</h2>
+				<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 mb-6 leading-tight">Tolerância zero</h2>
 				<p class="text-gray-600 text-base leading-relaxed mb-5">
 					A Ondas Marítimas mantém uma política de tolerância zero a suborno, corrupção e pagamentos de facilitação, em qualquer jurisdição onde opera.
 				</p>
@@ -56,7 +56,7 @@
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 			<div class="lg:order-2">
 				<p class="section-eyebrow mb-3">Protecção de Dados</p>
-				<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-6 leading-tight">Tratamento de dados</h2>
+				<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 mb-6 leading-tight">Tratamento de dados</h2>
 				<p class="text-gray-600 text-base leading-relaxed mb-5">
 					A Ondas Marítimas trata dados pessoais e informação comercial em conformidade com a Lei n.º 22/11, de 17 de Junho — Lei da Protecção de Dados Pessoais de Angola.
 				</p>
@@ -86,7 +86,7 @@
 
 <section class="py-12 bg-brand-navy">
 	<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-		<h2 class="text-2xl font-display font-bold text-white">Questões sobre compliance? Contacte os nossos canais institucionais.</h2>
+		<h2 class="text-2xl font-display font-normal text-white">Questões sobre compliance? Contacte os nossos canais institucionais.</h2>
 		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors whitespace-nowrap">
 			Contactar
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">

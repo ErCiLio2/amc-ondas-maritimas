@@ -36,7 +36,7 @@
 	</div>
 	<div class="relative max-w-7xl mx-auto px-6 py-28">
 		<p class="section-eyebrow mb-4 text-brand-cyan">Parcerias sólidas</p>
-		<h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight max-w-2xl">
+		<h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-white leading-tight max-w-2xl">
 			As nossas colaborações são um testemunho de confiança, fiabilidade e sucesso partilhado
 		</h1>
 		<p class="text-white/60 text-lg mt-6 max-w-xl leading-relaxed">
@@ -58,7 +58,7 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each sectors as s}
 				<div class="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 group hover:bg-gray-50 transition-colors px-2 -mx-2">
-					<h3 class="text-xl font-display font-bold text-gray-900 group-hover:text-brand-navy transition-colors">{s.label}</h3>
+					<h3 class="text-xl font-display font-normal text-gray-900 group-hover:text-brand-navy transition-colors">{s.label}</h3>
 					<p class="text-gray-500 text-base leading-relaxed">{s.desc}</p>
 				</div>
 			{/each}
@@ -76,7 +76,7 @@
 		<div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 border border-gray-200">
 			{#each proofPoints as p}
 				<div class="bg-white p-10 text-center">
-					<div class="text-5xl font-display font-bold text-gray-900 mb-3">{p.value}</div>
+					<div class="text-5xl font-display font-normal text-gray-900 mb-3">{p.value}</div>
 					<div class="text-gray-500 text-sm">{p.label}</div>
 				</div>
 			{/each}
@@ -92,7 +92,7 @@
 	<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 		<div>
 			<p class="section-eyebrow mb-4">Relações com clientes</p>
-			<h2 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-6 leading-tight">
+			<h2 class="text-3xl md:text-4xl font-display font-normal text-gray-900 mb-6 leading-tight">
 				Parceria contínua, não fornecimento pontual
 			</h2>
 			<p class="text-gray-600 text-base leading-relaxed mb-5">
@@ -125,7 +125,7 @@
 	</div>
 	<div class="bg-brand-navy px-10 py-14 flex flex-col justify-center">
 		<p class="text-brand-cyan-light text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">Torne-se cliente</p>
-		<h2 class="text-3xl font-display font-bold text-white mb-4">Trabalhe com a Ondas Marítimas</h2>
+		<h2 class="text-3xl font-display font-normal text-white mb-4">Trabalhe com a Ondas Marítimas</h2>
 		<p class="text-brand-cyan-pale text-sm leading-relaxed mb-8">Junte-se aos operadores marítimos, offshore e industriais que confiam na Ondas Marítimas para as suas operações em Angola.</p>
 		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors">
 			Contactar agora

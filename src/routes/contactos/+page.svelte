@@ -131,7 +131,7 @@
 	</div>
 	{#each locations as loc}
 		<div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t border-gray-200">
-			<h2 class="text-4xl md:text-5xl font-display font-bold text-gray-900">{loc.city}</h2>
+			<h2 class="text-4xl md:text-5xl font-display font-normal text-gray-900">{loc.city}</h2>
 			<div>
 				<p class="text-gray-900 font-semibold text-sm mb-1">{loc.entity}</p>
 				<p class="text-gray-500 text-sm mb-3">{loc.address}</p>

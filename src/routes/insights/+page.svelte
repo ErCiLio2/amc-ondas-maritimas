@@ -76,7 +76,7 @@
 						</div>
 						<p class="section-eyebrow mb-2">{article.category}</p>
 						<p class="text-gray-400 text-xs mb-3">{article.date}</p>
-						<h2 class="text-xl font-display font-bold text-gray-900 leading-snug mb-3 group-hover:text-brand-navy transition-colors flex-1">
+						<h2 class="text-xl font-display font-normal text-gray-900 leading-snug mb-3 group-hover:text-brand-navy transition-colors flex-1">
 							{article.title}
 						</h2>
 						<p class="text-gray-500 text-sm leading-relaxed mb-5">{article.excerpt}</p>

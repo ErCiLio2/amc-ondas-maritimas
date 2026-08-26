@@ -83,7 +83,7 @@
 			style="background-image: url('{img}'); opacity: {i === current ? 1 : 0};"
 		></div>
 	{/each}
-	<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20"></div>
+	<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30"></div>
 
 	<!-- Arrow right -->
 	<button
@@ -99,13 +99,13 @@
 	<div class="relative h-full flex flex-col justify-end pb-14 max-w-7xl mx-auto px-6">
 		<div class="max-w-2xl">
 			<p
-				class="text-brand-cyan text-[11px] font-semibold tracking-[0.25em] uppercase mb-3 transition-opacity duration-300"
+				class="text-lg text-2xl text-gray-300/90 font-semibold tracking-[0.25em] uppercase mb-3 transition-opacity duration-300"
 				class:opacity-0={fading}
 			>
 				{slides[current].eyebrow}
 			</p>
 			<h1
-				class="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-white leading-[1.1] transition-all duration-300"
+				class="text-5xl md:text-6xl lg:text-7xl font-display font-normal text-white leading-[1.1] transition-all duration-300"
 				class:opacity-0={fading}
 				class:translate-y-2={fading}
 			>

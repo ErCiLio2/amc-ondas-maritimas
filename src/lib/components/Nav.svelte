@@ -50,7 +50,7 @@
 		<!-- Logo -->
 		<a href="/" class="flex items-center gap-3 shrink-0">
 			<img
-				src="/logo-ondas-maritimas.png"
+				src="/logo.png"
 				alt="Ondas Marítimas"
 				class="h-9 w-auto object-contain"
 			/>

@@ -59,7 +59,7 @@
 						<p class="section-eyebrow mb-2">Telefones</p>
 						<div class="space-y-1">
 							{#each ['+244 934 556 090', '+244 942 716 804', '+244 921 717 744'] as p}
-								<a href="tel:{p.replace(/\s/g, '')}" class="block text-gray-600 hover:text-red-600 text-sm transition-colors">{p}</a>
+								<a href="tel:{p.replace(/\s/g, '')}" class="block text-gray-600 hover:text-brand-navy text-sm transition-colors">{p}</a>
 							{/each}
 						</div>
 					</div>
@@ -94,24 +94,24 @@
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 							<div>
 								<label class="block text-gray-500 text-xs mb-1.5" for="name">Nome</label>
-								<input id="name" type="text" required bind:value={name} placeholder="Nome" class="w-full border border-gray-200 focus:border-red-500 px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
+								<input id="name" type="text" required bind:value={name} placeholder="Nome" class="w-full border border-gray-200 focus:border-brand-cyan px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
 							</div>
 							<div>
 								<label class="block text-gray-500 text-xs mb-1.5" for="company">Empresa</label>
-								<input id="company" type="text" bind:value={company} placeholder="Empresa" class="w-full border border-gray-200 focus:border-red-500 px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
+								<input id="company" type="text" bind:value={company} placeholder="Empresa" class="w-full border border-gray-200 focus:border-brand-cyan px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
 							</div>
 						</div>
 						<div>
 							<label class="block text-gray-500 text-xs mb-1.5" for="email">E-mail</label>
-							<input id="email" type="email" required bind:value={email} placeholder="O seu e-mail" class="w-full border border-gray-200 focus:border-red-500 px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
+							<input id="email" type="email" required bind:value={email} placeholder="O seu e-mail" class="w-full border border-gray-200 focus:border-brand-cyan px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
 						</div>
 						<div>
 							<label class="block text-gray-500 text-xs mb-1.5" for="phone">Telefone</label>
-							<input id="phone" type="tel" bind:value={phone} placeholder="+244 9xx xxx xxx" class="w-full border border-gray-200 focus:border-red-500 px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
+							<input id="phone" type="tel" bind:value={phone} placeholder="+244 9xx xxx xxx" class="w-full border border-gray-200 focus:border-brand-cyan px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors bg-white" />
 						</div>
 						<div>
 							<label class="block text-gray-500 text-xs mb-1.5" for="message">Mensagem</label>
-							<textarea id="message" rows="5" bind:value={message} placeholder="Descreva a vossa operação e necessidades..." class="w-full border border-gray-200 focus:border-red-500 px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors resize-none bg-white"></textarea>
+							<textarea id="message" rows="5" bind:value={message} placeholder="Descreva a vossa operação e necessidades..." class="w-full border border-gray-200 focus:border-brand-cyan px-4 py-3 text-gray-900 text-sm placeholder-gray-300 outline-none transition-colors resize-none bg-white"></textarea>
 						</div>
 						<p class="text-gray-400 text-xs">* Todos os campos são obrigatórios</p>
 						<button type="submit" disabled={sending} class="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed">
@@ -137,7 +137,7 @@
 				<p class="text-gray-500 text-sm mb-3">{loc.address}</p>
 				<div class="flex flex-wrap gap-4">
 					{#each loc.phones as p}
-						<a href="tel:{p.replace(/\s/g, '')}" class="text-red-600 hover:text-red-700 text-sm font-medium transition-colors">{p}</a>
+						<a href="tel:{p.replace(/\s/g, '')}" class="text-brand-navy hover:text-brand-navy-dark text-sm font-medium transition-colors">{p}</a>
 					{/each}
 				</div>
 			</div>

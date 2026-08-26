@@ -99,7 +99,7 @@
 	<div class="relative h-full flex flex-col justify-end pb-14 max-w-7xl mx-auto px-6">
 		<div class="max-w-2xl">
 			<p
-				class="text-red-400 text-[11px] font-semibold tracking-[0.25em] uppercase mb-3 transition-opacity duration-300"
+				class="text-brand-cyan text-[11px] font-semibold tracking-[0.25em] uppercase mb-3 transition-opacity duration-300"
 				class:opacity-0={fading}
 			>
 				{slides[current].eyebrow}
@@ -184,12 +184,12 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each services as svc}
 				<div class="py-8 grid grid-cols-1 md:grid-cols-[100px_1fr_auto] gap-6 items-center group hover:bg-white transition-colors px-2 -mx-2">
-					<div class="text-red-600/25 text-5xl font-display font-bold leading-none group-hover:text-red-600/50 transition-colors">{svc.num}</div>
+					<div class="text-brand-navy/25 text-5xl font-display font-bold leading-none group-hover:text-brand-navy/50 transition-colors">{svc.num}</div>
 					<div>
 						<h3 class="text-xl font-display font-bold text-gray-900 mb-1.5">{svc.title}</h3>
 						<p class="text-gray-500 text-sm leading-relaxed max-w-lg">{svc.desc}</p>
 					</div>
-					<a href="/servicos#{svc.id}" class="text-red-600 text-sm font-semibold flex items-center gap-2 shrink-0 hover:gap-3 transition-all">
+					<a href="/servicos#{svc.id}" class="text-brand-navy text-sm font-semibold flex items-center gap-2 shrink-0 hover:gap-3 transition-all">
 						Saber mais
 						<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -213,19 +213,19 @@
 	<div class="absolute inset-0 bg-gray-900/70"></div>
 	<div class="relative max-w-7xl mx-auto px-6 py-24">
 		<div class="max-w-xs">
-			<p class="text-red-400 text-[11px] font-semibold tracking-[0.25em] uppercase mb-3">Compromisso & Qualidade</p>
+			<p class="text-brand-cyan text-[11px] font-semibold tracking-[0.25em] uppercase mb-3">Compromisso & Qualidade</p>
 			<h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-6 leading-tight">
 				Integramos rigor e segurança em cada operação
 			</h2>
 			<div class="space-y-2">
 				{#each commitments.slice(0, 3) as c}
-					<div class="bg-red-600 px-5 py-3 flex items-center gap-3">
+					<div class="bg-brand-navy px-5 py-3 flex items-center gap-3">
 						<div class="w-1.5 h-1.5 rounded-full bg-white shrink-0"></div>
 						<span class="text-white text-sm font-semibold">{c}</span>
 					</div>
 				{/each}
 			</div>
-			<a href="/compromisso" class="inline-flex items-center gap-2 mt-6 text-red-300 text-sm font-semibold hover:text-white transition-colors">
+			<a href="/compromisso" class="inline-flex items-center gap-2 mt-6 text-brand-cyan-light text-sm font-semibold hover:text-white transition-colors">
 				Saber mais
 				<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -246,7 +246,7 @@
 			{#each corridors as c, i}
 				<div class="bg-white p-6 text-center hover:bg-gray-50 transition-colors group">
 					<div class="text-gray-300 text-xs font-mono mb-2">0{i + 1}</div>
-					<div class="text-gray-900 font-display font-bold text-base group-hover:text-red-600 transition-colors">{c}</div>
+					<div class="text-gray-900 font-display font-bold text-base group-hover:text-brand-navy transition-colors">{c}</div>
 				</div>
 			{/each}
 		</div>
@@ -269,8 +269,8 @@
 		</div>
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 			{#each ['Óleo & Gás', 'Marítimo', 'Industrial', 'Logística & Freight'] as s}
-				<div class="border border-gray-200 bg-white px-6 py-5 text-center hover:border-red-500 hover:bg-red-50 transition-colors group">
-					<div class="text-gray-900 font-semibold text-sm group-hover:text-red-600 transition-colors">{s}</div>
+				<div class="border border-gray-200 bg-white px-6 py-5 text-center hover:border-brand-cyan hover:bg-brand-cyan-pale transition-colors group">
+					<div class="text-gray-900 font-semibold text-sm group-hover:text-brand-navy transition-colors">{s}</div>
 				</div>
 			{/each}
 		</div>
@@ -289,15 +289,15 @@
 			class="w-full h-full object-cover"
 		/>
 	</div>
-	<div class="bg-red-600 px-10 py-14 flex flex-col justify-center">
-		<p class="text-red-200 text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">Contacto</p>
+	<div class="bg-brand-navy px-10 py-14 flex flex-col justify-center">
+		<p class="text-brand-cyan-light text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">Contacto</p>
 		<h2 class="text-3xl font-display font-bold text-white mb-4 leading-tight">
 			Integre a nossa base de parceiros de serviço
 		</h2>
-		<p class="text-red-100 text-sm leading-relaxed mb-8">
+		<p class="text-brand-cyan-pale text-sm leading-relaxed mb-8">
 			Colocamos à disposição a nossa experiência, capacidade logística e profissionalismo para a vossa operação.
 		</p>
-		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-red-600 font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-red-50 transition-colors">
+		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors">
 			Agendar reunião
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -326,9 +326,9 @@
 						/>
 					</div>
 					<p class="section-eyebrow mb-2">{n.cat}</p>
-					<h3 class="text-xl font-display font-bold text-gray-900 mb-3 leading-snug group-hover:text-red-600 transition-colors">{n.title}</h3>
+					<h3 class="text-xl font-display font-bold text-gray-900 mb-3 leading-snug group-hover:text-brand-navy transition-colors">{n.title}</h3>
 					<p class="text-gray-500 text-sm leading-relaxed mb-4">{n.excerpt}</p>
-					<a href="/insights" class="text-red-600 text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+					<a href="/insights" class="text-brand-navy text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all">
 						Ler artigo
 						<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />

@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 
 	let mobileOpen = $state(false);
-	let openDropdown = $state<string | null>(null);
 
 	const nav = [
 		{
@@ -35,22 +34,26 @@
 	}
 </script>
 
-<!-- Top utility bar -->
-<div class="bg-red-600 text-white text-[11px] tracking-wide">
+<!-- Utility bar — brand navy -->
+<div class="bg-brand-navy text-white text-[11px] tracking-wide">
 	<div class="max-w-7xl mx-auto px-6 h-9 flex items-center justify-end gap-6">
-		<a href="/compromisso" class="hover:text-red-100 transition-colors">Compromisso & Qualidade</a>
-		<span class="text-red-300">|</span>
-		<a href="/compliance" class="hover:text-red-100 transition-colors">Compliance</a>
+		<a href="/compromisso" class="text-brand-cyan-light hover:text-white transition-colors">Compromisso & Qualidade</a>
+		<span class="text-white/20">|</span>
+		<a href="/compliance" class="text-brand-cyan-light hover:text-white transition-colors">Compliance</a>
 	</div>
 </div>
 
 <!-- Main nav -->
 <header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
 	<div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
+
 		<!-- Logo -->
-		<a href="/" class="flex flex-col leading-none shrink-0">
-			<span class="text-gray-900 font-display font-bold text-lg tracking-tight">Ondas Marítimas</span>
-			<span class="text-gray-400 text-[9px] tracking-[0.18em] uppercase">Serviços Marítimos, Lda</span>
+		<a href="/" class="flex items-center gap-3 shrink-0">
+			<img
+				src="/logo-ondas-maritimas.png"
+				alt="Ondas Marítimas"
+				class="h-9 w-auto object-contain"
+			/>
 		</a>
 
 		<!-- Desktop nav -->
@@ -60,7 +63,7 @@
 					<div class="relative group">
 						<a
 							href={item.href}
-							class="text-sm font-medium flex items-center gap-1 transition-colors {isActive(item.href) ? 'text-red-600' : 'text-gray-700 hover:text-red-600'}"
+							class="text-sm font-medium flex items-center gap-1 transition-colors {isActive(item.href) ? 'text-brand-navy' : 'text-gray-700 hover:text-brand-navy'}"
 						>
 							{item.label}
 							<svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -71,7 +74,7 @@
 							{#each item.children as child}
 								<a
 									href={child.href}
-									class="block px-5 py-3 text-sm text-gray-600 hover:text-red-600 hover:bg-gray-50 transition-colors"
+									class="block px-5 py-3 text-sm text-gray-600 hover:text-brand-navy hover:bg-gray-50 transition-colors"
 								>
 									{child.label}
 								</a>
@@ -81,7 +84,7 @@
 				{:else}
 					<a
 						href={item.href}
-						class="text-sm font-medium transition-colors {isActive(item.href) ? 'text-red-600' : 'text-gray-700 hover:text-red-600'}"
+						class="text-sm font-medium transition-colors {isActive(item.href) ? 'text-brand-navy' : 'text-gray-700 hover:text-brand-navy'}"
 					>
 						{item.label}
 					</a>
@@ -89,23 +92,17 @@
 			{/each}
 		</nav>
 
-		<!-- Right side -->
-		<div class="flex items-center gap-4">
+		<!-- Right -->
+		<div class="flex items-center gap-3">
 			<a href="/contactos" class="hidden md:inline-flex btn-primary text-[11px] py-2 px-5">
 				Agendar Reunião
 			</a>
-			<!-- Search icon -->
-			<button class="hidden lg:flex w-9 h-9 items-center justify-center text-gray-500 hover:text-red-600 transition-colors" aria-label="Pesquisar">
+			<button class="hidden lg:flex w-9 h-9 items-center justify-center text-gray-400 hover:text-brand-navy transition-colors" aria-label="Pesquisar">
 				<svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 				</svg>
 			</button>
-			<!-- Mobile toggle -->
-			<button
-				class="lg:hidden text-gray-700 p-1"
-				onclick={() => (mobileOpen = !mobileOpen)}
-				aria-label="Menu"
-			>
+			<button class="lg:hidden text-gray-700 p-1" onclick={() => (mobileOpen = !mobileOpen)} aria-label="Menu">
 				{#if mobileOpen}
 					<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -123,11 +120,7 @@
 	{#if mobileOpen}
 		<div class="lg:hidden bg-white border-t border-gray-100 px-6 py-4 space-y-1">
 			{#each nav as item}
-				<a
-					href={item.href}
-					class="block py-2.5 text-sm text-gray-700 hover:text-red-600 transition-colors"
-					onclick={() => (mobileOpen = false)}
-				>
+				<a href={item.href} class="block py-2.5 text-sm text-gray-700 hover:text-brand-navy transition-colors" onclick={() => (mobileOpen = false)}>
 					{item.label}
 				</a>
 			{/each}

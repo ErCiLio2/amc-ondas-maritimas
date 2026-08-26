@@ -35,7 +35,7 @@
 		<div class="absolute inset-0 bg-gray-900/60"></div>
 	</div>
 	<div class="relative max-w-7xl mx-auto px-6 py-28">
-		<p class="section-eyebrow mb-4 text-red-400">Parcerias sólidas</p>
+		<p class="section-eyebrow mb-4 text-brand-cyan">Parcerias sólidas</p>
 		<h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight max-w-2xl">
 			As nossas colaborações são um testemunho de confiança, fiabilidade e sucesso partilhado
 		</h1>
@@ -58,7 +58,7 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each sectors as s}
 				<div class="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 group hover:bg-gray-50 transition-colors px-2 -mx-2">
-					<h3 class="text-xl font-display font-bold text-gray-900 group-hover:text-red-600 transition-colors">{s.label}</h3>
+					<h3 class="text-xl font-display font-bold text-gray-900 group-hover:text-brand-navy transition-colors">{s.label}</h3>
 					<p class="text-gray-500 text-base leading-relaxed">{s.desc}</p>
 				</div>
 			{/each}
@@ -107,7 +107,7 @@
 			<ul class="space-y-4">
 				{#each benefits as b}
 					<li class="flex items-start gap-3">
-						<svg class="w-4 h-4 text-red-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+						<svg class="w-4 h-4 text-brand-navy mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
 						</svg>
 						<span class="text-gray-600 text-sm leading-relaxed">{b}</span>
@@ -123,11 +123,11 @@
 	<div class="relative h-56 md:h-auto overflow-hidden">
 		<img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=80&auto=format&fit=crop" alt="Porto de operações" class="w-full h-full object-cover" />
 	</div>
-	<div class="bg-red-600 px-10 py-14 flex flex-col justify-center">
-		<p class="text-red-200 text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">Torne-se cliente</p>
+	<div class="bg-brand-navy px-10 py-14 flex flex-col justify-center">
+		<p class="text-brand-cyan-light text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">Torne-se cliente</p>
 		<h2 class="text-3xl font-display font-bold text-white mb-4">Trabalhe com a Ondas Marítimas</h2>
-		<p class="text-red-100 text-sm leading-relaxed mb-8">Junte-se aos operadores marítimos, offshore e industriais que confiam na Ondas Marítimas para as suas operações em Angola.</p>
-		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-red-600 font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-red-50 transition-colors">
+		<p class="text-brand-cyan-pale text-sm leading-relaxed mb-8">Junte-se aos operadores marítimos, offshore e industriais que confiam na Ondas Marítimas para as suas operações em Angola.</p>
+		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors">
 			Contactar agora
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />

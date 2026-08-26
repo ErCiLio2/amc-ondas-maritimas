@@ -1,20 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-red-700: #a93226;
-  --color-red-600: #c0392b;
-  --color-red-500: #e74c3c;
-  --color-red-100: #fde8e8;
+  /* Ondas Marítimas brand palette */
+  --color-brand-navy:       #1c3d6a;
+  --color-brand-navy-dark:  #142d52;
+  --color-brand-navy-light: #2a5491;
+  --color-brand-cyan:       #00a8cc;
+  --color-brand-cyan-dark:  #0090b0;
+  --color-brand-cyan-light: #4dc4e0;
+  --color-brand-cyan-pale:  #e6f4f8;
+
   --color-gray-50:  #f9f9f9;
   --color-gray-100: #f0f0f0;
   --color-gray-200: #e0e0e0;
   --color-gray-400: #9e9e9e;
+  --color-gray-500: #6b6b6b;
   --color-gray-600: #555555;
   --color-gray-800: #222222;
   --color-gray-900: #111111;
 
   --font-display: "Montserrat", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-body:    "Inter", "Segoe UI", system-ui, sans-serif;
 }
 
 @layer base {
@@ -25,21 +31,12 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-7 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold text-xs tracking-[0.12em] uppercase transition-colors duration-200 cursor-pointer;
+    @apply inline-flex items-center gap-2 px-7 py-3 bg-brand-navy hover:bg-brand-navy-dark text-white font-semibold text-xs tracking-[0.12em] uppercase transition-colors duration-200 cursor-pointer;
   }
   .btn-outline {
     @apply inline-flex items-center gap-2 px-7 py-3 border border-gray-800 hover:bg-gray-800 hover:text-white text-gray-800 font-semibold text-xs tracking-[0.12em] uppercase transition-colors duration-200;
   }
   .section-eyebrow {
-    @apply text-red-600 text-[11px] font-semibold tracking-[0.2em] uppercase;
-  }
-  .section-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight text-gray-900;
-  }
-  .stripes {
-    @apply flex gap-[3px];
-  }
-  .stripe {
-    @apply w-[3px] bg-red-600;
+    @apply text-brand-cyan text-[11px] font-semibold tracking-[0.2em] uppercase;
   }
 }

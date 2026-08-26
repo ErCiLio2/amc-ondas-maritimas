@@ -32,7 +32,7 @@
 		<div class="absolute inset-0 bg-gray-900/65"></div>
 	</div>
 	<div class="relative max-w-7xl mx-auto px-6 py-28">
-		<p class="text-red-400 text-[11px] font-semibold tracking-[0.25em] uppercase mb-3">A nossa abordagem</p>
+		<p class="text-brand-cyan text-[11px] font-semibold tracking-[0.25em] uppercase mb-3">A nossa abordagem</p>
 		<h1 class="text-4xl md:text-5xl font-display font-bold text-white leading-tight max-w-2xl mb-4">
 			Comprometidos a proteger as pessoas e as operações em cada corredor
 		</h1>
@@ -52,7 +52,7 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each pillars as p, i}
 				<div class="py-8 grid grid-cols-1 md:grid-cols-[60px_1fr_2fr] gap-6 items-start group hover:bg-gray-50 transition-colors px-2 -mx-2">
-					<div class="text-red-600/25 text-3xl font-display font-bold group-hover:text-red-600/50 transition-colors">0{i + 1}</div>
+					<div class="text-brand-navy/25 text-3xl font-display font-bold group-hover:text-brand-navy/50 transition-colors">0{i + 1}</div>
 					<h3 class="text-gray-900 font-display font-bold text-lg leading-snug">{p.title}</h3>
 					<p class="text-gray-500 text-base leading-relaxed">{p.desc}</p>
 				</div>
@@ -81,7 +81,7 @@
 		</div>
 		<div class="space-y-3">
 			{#each hsse as item}
-				<div class="border-l-2 border-red-600 pl-5 py-3 bg-white">
+				<div class="border-l-2 border-brand-navy pl-5 py-3 bg-white">
 					<span class="text-gray-700 text-sm leading-relaxed">{item}</span>
 				</div>
 			{/each}
@@ -101,17 +101,17 @@
 			{#each pipeline as step, i}
 				<div class="flex-1 min-w-[120px] bg-white p-6 text-center group hover:bg-gray-50 transition-colors">
 					<div class="text-gray-300 text-xs font-mono mb-2">0{i + 1}</div>
-					<div class="text-gray-900 font-semibold text-sm group-hover:text-red-600 transition-colors">{step}</div>
+					<div class="text-gray-900 font-semibold text-sm group-hover:text-brand-navy transition-colors">{step}</div>
 				</div>
 			{/each}
 		</div>
 	</div>
 </section>
 
-<section class="py-14 bg-red-600">
+<section class="py-14 bg-brand-navy">
 	<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
 		<h2 class="text-3xl font-display font-bold text-white">Quer verificar a nossa capacidade operacional?</h2>
-		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-red-600 font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-red-50 transition-colors whitespace-nowrap">
+		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors whitespace-nowrap">
 			Solicitar reunião
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />

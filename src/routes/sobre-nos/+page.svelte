@@ -33,19 +33,19 @@
 <section id="visao" class="py-20 bg-white">
 	<div class="max-w-7xl mx-auto px-6">
 		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-			<div class="border-t-2 border-red-600 pt-8">
+			<div class="border-t-2 border-brand-navy pt-8">
 				<h2 class="section-eyebrow mb-4">Visão</h2>
 				<p class="text-gray-600 text-base leading-relaxed">
 					Ser o parceiro de referência em procurement, shipchandler e suporte operacional na costa angolana, reconhecido pela fiabilidade, rastreabilidade e capacidade de resposta em operações críticas.
 				</p>
 			</div>
-			<div class="border-t-2 border-red-600 pt-8">
+			<div class="border-t-2 border-brand-navy pt-8">
 				<h2 class="section-eyebrow mb-4">Missão</h2>
 				<p class="text-gray-600 text-base leading-relaxed">
 					Garantir que as operações dos nossos clientes nunca param por falta de material, pessoal ou suporte logístico — com processos auditáveis, cumprimento HSSE e cobertura em todos os corredores estratégicos.
 				</p>
 			</div>
-			<div class="border-t-2 border-red-600 pt-8">
+			<div class="border-t-2 border-brand-navy pt-8">
 				<h2 class="section-eyebrow mb-4">Valores</h2>
 				<ul class="space-y-2">
 					{#each values as val}
@@ -148,10 +148,10 @@
 			class="w-full h-full object-cover"
 		/>
 	</div>
-	<div class="bg-red-600 px-10 py-14 flex flex-col justify-center">
+	<div class="bg-brand-navy px-10 py-14 flex flex-col justify-center">
 		<h2 class="text-3xl font-display font-bold text-white mb-4">Quer trabalhar com a Ondas Marítimas?</h2>
-		<p class="text-red-100 text-sm leading-relaxed mb-8">Contacte-nos para agendar uma reunião de apresentação e conhecer a nossa capacidade operacional.</p>
-		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-red-600 font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-red-50 transition-colors">
+		<p class="text-brand-cyan-pale text-sm leading-relaxed mb-8">Contacte-nos para agendar uma reunião de apresentação e conhecer a nossa capacidade operacional.</p>
+		<a href="/contactos" class="self-start inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors">
 			Agendar reunião
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />

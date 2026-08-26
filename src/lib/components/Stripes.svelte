@@ -5,7 +5,7 @@
 <div class="flex gap-[3px] items-end">
 	{#each Array(count) as _, i}
 		<div
-			class="w-[3.5px] bg-red-600 {height}"
+			class="w-[3.5px] bg-brand-navy {height}"
 			style="opacity: {0.4 + (i / count) * 0.6}"
 		></div>
 	{/each}

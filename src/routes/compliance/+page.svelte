@@ -37,7 +37,7 @@
 					{ title: 'Pagamentos de facilitação', desc: 'Proibidos em todas as jurisdições e em todas as circunstâncias.' },
 					{ title: 'Denúncia confidencial', desc: 'Canal dedicado para reporte de situações suspeitas por colaboradores e parceiros.' }
 				] as item}
-					<div class="border-l-2 border-red-600 pl-5 py-3">
+					<div class="border-l-2 border-brand-navy pl-5 py-3">
 						<div class="text-gray-900 font-semibold mb-1">{item.title}</div>
 						<div class="text-gray-500 text-sm leading-relaxed">{item.desc}</div>
 					</div>
@@ -74,7 +74,7 @@
 					{ title: 'Acordos de confidencialidade', desc: 'Toda a informação operacional é coberta por NDA antes do início da relação comercial.' },
 					{ title: 'Retenção de dados', desc: 'Os dados são retidos apenas pelo período necessário à operação ou obrigações legais.' }
 				] as item}
-					<div class="border-l-2 border-red-600 pl-5 py-3">
+					<div class="border-l-2 border-brand-navy pl-5 py-3">
 						<div class="text-gray-900 font-semibold mb-1">{item.title}</div>
 						<div class="text-gray-500 text-sm leading-relaxed">{item.desc}</div>
 					</div>
@@ -84,10 +84,10 @@
 	</div>
 </section>
 
-<section class="py-12 bg-red-600">
+<section class="py-12 bg-brand-navy">
 	<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
 		<h2 class="text-2xl font-display font-bold text-white">Questões sobre compliance? Contacte os nossos canais institucionais.</h2>
-		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-red-600 font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-red-50 transition-colors whitespace-nowrap">
+		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors whitespace-nowrap">
 			Contactar
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />

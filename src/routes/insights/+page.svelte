@@ -76,11 +76,11 @@
 						</div>
 						<p class="section-eyebrow mb-2">{article.category}</p>
 						<p class="text-gray-400 text-xs mb-3">{article.date}</p>
-						<h2 class="text-xl font-display font-bold text-gray-900 leading-snug mb-3 group-hover:text-red-600 transition-colors flex-1">
+						<h2 class="text-xl font-display font-bold text-gray-900 leading-snug mb-3 group-hover:text-brand-navy transition-colors flex-1">
 							{article.title}
 						</h2>
 						<p class="text-gray-500 text-sm leading-relaxed mb-5">{article.excerpt}</p>
-						<a href="/insights/{article.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')}" class="text-red-600 text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all mt-auto">
+						<a href="/insights/{article.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')}" class="text-brand-navy text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all mt-auto">
 							Ler artigo
 							<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />

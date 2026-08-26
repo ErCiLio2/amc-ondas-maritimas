@@ -29,12 +29,12 @@
 		<div class="divide-y divide-gray-200 border-y border-gray-200">
 			{#each corridors as c}
 				<div class="py-10 grid grid-cols-1 md:grid-cols-[140px_1fr_auto] gap-6 items-center group hover:bg-gray-50 transition-colors px-2 -mx-2">
-					<div class="text-gray-200 text-5xl font-display font-bold group-hover:text-red-100 transition-colors">{c.num}</div>
+					<div class="text-gray-200 text-5xl font-display font-bold group-hover:text-brand-cyan-pale transition-colors">{c.num}</div>
 					<div>
-						<h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">{c.name}</h2>
+						<h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 mb-2 group-hover:text-brand-navy transition-colors">{c.name}</h2>
 						<p class="text-gray-500 text-base leading-relaxed max-w-lg">{c.desc}</p>
 					</div>
-					<a href="/contactos" class="text-red-600 text-sm font-semibold flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity hover:gap-3">
+					<a href="/contactos" class="text-brand-navy text-sm font-semibold flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity hover:gap-3">
 						Operar aqui
 						<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -66,10 +66,10 @@
 	</div>
 </section>
 
-<section class="py-12 bg-red-600">
+<section class="py-12 bg-brand-navy">
 	<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
 		<h2 class="text-3xl font-display font-bold text-white">Opera nalgum destes corredores?</h2>
-		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-red-600 font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-red-50 transition-colors whitespace-nowrap">
+		<a href="/contactos" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-xs tracking-widest uppercase px-7 py-3.5 hover:bg-brand-cyan-pale transition-colors whitespace-nowrap">
 			Contactar agora
 			<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
